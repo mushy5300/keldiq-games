@@ -1,369 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Keldiq Games | Free Games Online</title>
-  <meta name="description" content="Play free games online at Keldiq Games. Quick, fun games you can play instantly on desktop or mobile.">
+<title>Keldiq Games | Free Games Online</title>
+<meta name="description" content="Play free games online at Keldiq Games. Quick, fun games you can play instantly on desktop or mobile.">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top, #16265c 0%, #080d20 40%, #03050c 100%);
-      color: white;
-      min-height: 100vh;
-    }
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:radial-gradient(circle at top,#16265c 0%,#080d20 40%,#03050c 100%);
+color:white;
+min-height:100vh;
+}
 
-    header {
-      padding: 22px 7%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(3,5,12,.75);
-    }
+header{
+padding:22px 7%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid rgba(255,255,255,.08);
+background:rgba(3,5,12,.8);
+}
 
-    .logo {
-      font-size: 27px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
+.logo{
+font-size:27px;
+font-weight:900;
+letter-spacing:1px;
+}
 
-    .logo span {
-      color: #3c82ff;
-    }
+.logo span{color:#3c82ff}
 
-    nav a {
-      color: #d7e1ff;
-      text-decoration: none;
-      margin-left: 24px;
-      font-weight: bold;
-    }
+nav a{
+color:#d7e1ff;
+text-decoration:none;
+margin-left:24px;
+font-weight:bold;
+}
 
-    .hero {
-      text-align: center;
-      padding: 65px 20px 35px;
-    }
+.hero{
+text-align:center;
+padding:65px 20px 35px;
+}
 
-    .hero h1 {
-      font-size: clamp(38px, 7vw, 72px);
-      line-height: 1;
-      margin-bottom: 18px;
-    }
+.hero h1{
+font-size:clamp(38px,7vw,72px);
+line-height:1;
+margin-bottom:18px;
+}
 
-    .hero h1 span {
-      color: #4d8dff;
-    }
+.hero h1 span{color:#4d8dff}
 
-    .hero p {
-      color: #aebbdc;
-      font-size: 18px;
-      max-width: 650px;
-      margin: auto;
-      line-height: 1.6;
-    }
+.hero p{
+color:#aebbdc;
+font-size:18px;
+max-width:650px;
+margin:auto;
+line-height:1.6;
+}
 
-    .section {
-      width: min(1100px, 92%);
-      margin: 30px auto 60px;
-    }
+.section{
+width:min(1100px,92%);
+margin:30px auto 60px;
+}
 
-    .section-title {
-      margin-bottom: 18px;
-      font-size: 25px;
-    }
+.section-title{
+margin-bottom:18px;
+font-size:25px;
+}
 
-    .games {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
+.games{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
 
-    .game-card {
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 18px;
-      padding: 24px;
-      transition: .2s;
-    }
+.game-card{
+background:rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.1);
+border-radius:18px;
+padding:24px;
+transition:.2s;
+}
 
-    .game-card:hover {
-      transform: translateY(-4px);
-      border-color: #4d8dff;
-    }
+.game-card:hover{
+transform:translateY(-4px);
+border-color:#4d8dff;
+}
 
-    .game-icon {
-      font-size: 45px;
-      margin-bottom: 14px;
-    }
+.game-icon{
+font-size:45px;
+margin-bottom:14px;
+}
 
-    .game-card h3 {
-      font-size: 21px;
-      margin-bottom: 9px;
-    }
+.game-card h3{
+font-size:21px;
+margin-bottom:9px;
+}
 
-    .game-card p {
-      color: #aebbdc;
-      line-height: 1.5;
-      min-height: 48px;
-    }
+.game-card p{
+color:#aebbdc;
+line-height:1.5;
+min-height:48px;
+}
 
-    button {
-      border: 0;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 18px;
-      background: #377dff;
-      color: white;
-      font-size: 15px;
-    }
+button{
+border:0;
+border-radius:10px;
+padding:12px 18px;
+font-weight:800;
+cursor:pointer;
+margin-top:18px;
+background:#377dff;
+color:white;
+font-size:15px;
+}
 
-    button:hover {
-      background: #5792ff;
-    }
+button:hover{background:#5792ff}
 
-    .coming {
-      opacity: .55;
-    }
+button:disabled{cursor:default}
 
-    .game-area {
-      margin-top: 40px;
-      display: none;
-      text-align: center;
-      background: rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.1);
-      padding: 35px 20px;
-      border-radius: 20px;
-    }
+.coming{opacity:.55}
 
-    .game-area h2 {
-      margin-bottom: 10px;
-    }
+.game-area{
+margin-top:40px;
+display:none;
+text-align:center;
+background:rgba(0,0,0,.35);
+border:1px solid rgba(255,255,255,.1);
+padding:35px 20px;
+border-radius:20px;
+}
 
-    .score {
-      font-size: 22px;
-      margin: 15px;
-      color: #7eabff;
-      font-weight: bold;
-    }
+.score{
+font-size:22px;
+margin:15px;
+color:#7eabff;
+font-weight:bold;
+}
 
-    #target {
-      width: 85px;
-      height: 85px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #377dff, #8a4dff);
-      margin: 35px auto;
-      cursor: pointer;
-      box-shadow: 0 0 35px rgba(55,125,255,.55);
-      transition: transform .1s;
-    }
+.timer{
+font-size:18px;
+color:#c9d4ef;
+}
 
-    #target:active {
-      transform: scale(.88);
-    }
+#target{
+width:85px;
+height:85px;
+border-radius:50%;
+background:linear-gradient(135deg,#377dff,#8a4dff);
+margin:35px auto;
+cursor:pointer;
+box-shadow:0 0 35px rgba(55,125,255,.55);
+}
 
-    .timer {
-      font-size: 18px;
-      color: #c9d4ef;
-    }
+#spaceGame{
+width:min(100%,700px);
+height:500px;
+margin:25px auto 10px;
+position:relative;
+overflow:hidden;
+border-radius:16px;
+border:2px solid rgba(77,141,255,.6);
+background:
+radial-gradient(circle at 20% 15%,white 0 1px,transparent 2px),
+radial-gradient(circle at 70% 30%,white 0 1px,transparent 2px),
+radial-gradient(circle at 40% 60%,white 0 1px,transparent 2px),
+radial-gradient(circle at 85% 75%,white 0 1px,transparent 2px),
+linear-gradient(#030612,#07112b);
+touch-action:none;
+}
 
-    footer {
-      text-align: center;
-      color: #7784a5;
-      border-top: 1px solid rgba(255,255,255,.08);
-      padding: 30px 20px;
-      margin-top: 50px;
-    }
+#ship{
+position:absolute;
+width:50px;
+height:50px;
+bottom:18px;
+left:calc(50% - 25px);
+font-size:42px;
+line-height:50px;
+user-select:none;
+}
 
-    @media (max-width: 600px) {
-      nav {
-        display: none;
-      }
+.asteroid{
+position:absolute;
+font-size:38px;
+width:45px;
+height:45px;
+line-height:45px;
+user-select:none;
+}
 
-      .hero {
-        padding-top: 45px;
-      }
-    }
-  </style>
+.space-stats{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+font-weight:bold;
+color:#cbd7f5;
+}
+
+.instructions{
+color:#9eacd0;
+margin-top:12px;
+font-size:14px;
+}
+
+footer{
+text-align:center;
+color:#7784a5;
+border-top:1px solid rgba(255,255,255,.08);
+padding:30px 20px;
+margin-top:50px;
+}
+
+@media(max-width:600px){
+nav{display:none}
+.hero{padding-top:45px}
+#spaceGame{height:430px}
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">KELDIQ <span>GAMES</span></div>
+<div class="logo">KELDIQ <span>GAMES</span></div>
 
-  <nav>
-    <a href="#games">Games</a>
-    <a href="#about">About</a>
-  </nav>
+<nav>
+<a href="#games">Games</a>
+<a href="#about">About</a>
+</nav>
 </header>
 
 <section class="hero">
-  <h1>PLAY. COMPETE.<br><span>BEAT YOUR SCORE.</span></h1>
+<h1>PLAY. COMPETE.<br><span>BEAT YOUR SCORE.</span></h1>
 
-  <p>
-    Instant free games with no downloads.
-    Play on your phone or computer and see how high you can score.
-  </p>
+<p>
+Instant free games with no downloads.
+Play on your phone or computer and see how high you can score.
+</p>
 </section>
 
 <main class="section" id="games">
 
-  <h2 class="section-title">🔥 Play Now</h2>
+<h2 class="section-title">🔥 Play Now</h2>
 
-  <div class="games">
+<div class="games">
 
-    <div class="game-card">
-      <div class="game-icon">🎯</div>
-      <h3>Tap Rush</h3>
-      <p>
-        How fast are you? Hit the target as many times as possible
-        before the clock runs out.
-      </p>
+<div class="game-card">
+<div class="game-icon">🎯</div>
+<h3>Tap Rush</h3>
+<p>Hit the target as many times as possible before the clock runs out.</p>
+<button onclick="startTapRush()">PLAY NOW</button>
+</div>
 
-      <button onclick="startGame()">PLAY NOW</button>
-    </div>
+<div class="game-card coming">
+<div class="game-icon">🧠</div>
+<h3>Brain Blitz</h3>
+<p>Fast questions. Fast answers. Beat the clock.</p>
+<button disabled>COMING SOON</button>
+</div>
 
-    <div class="game-card coming">
-      <div class="game-icon">🧠</div>
-      <h3>Brain Blitz</h3>
-      <p>Fast questions. Fast answers. Beat the clock.</p>
-      <button disabled>COMING SOON</button>
-    </div>
+<div class="game-card">
+<div class="game-icon">🚀</div>
+<h3>Space Dodge</h3>
+<p>Dodge incoming asteroids and survive as long as possible.</p>
+<button onclick="openSpaceDodge()">PLAY NOW</button>
+</div>
 
-    <div class="game-card coming">
-      <div class="game-icon">🚀</div>
-      <h3>Space Dodge</h3>
-      <p>Dodge obstacles and survive as long as you can.</p>
-      <button disabled>COMING SOON</button>
-    </div>
+<div class="game-card coming">
+<div class="game-icon">💎</div>
+<h3>Gem Drop</h3>
+<p>Match gems, build combos and chase a massive score.</p>
+<button disabled>COMING SOON</button>
+</div>
 
-    <div class="game-card coming">
-      <div class="game-icon">💎</div>
-      <h3>Gem Drop</h3>
-      <p>Match gems, build combos and chase a massive score.</p>
-      <button disabled>COMING SOON</button>
-    </div>
+</div>
 
-  </div>
+<div class="game-area" id="tapArea">
 
-  <div class="game-area" id="gameArea">
+<h2>🎯 Tap Rush</h2>
+<p>Click or tap the target as fast as you can!</p>
 
-    <h2>🎯 Tap Rush</h2>
+<div class="score">
+Score: <span id="tapScore">0</span>
+</div>
 
-    <p>Click or tap the target as fast as you can!</p>
+<div class="timer">
+Time: <span id="tapTime">10</span> seconds
+</div>
 
-    <div class="score">
-      Score: <span id="score">0</span>
-    </div>
+<div id="target" onclick="hitTarget()"></div>
 
-    <div class="timer">
-      Time: <span id="time">10</span> seconds
-    </div>
+<button onclick="startTapRush()">RESTART</button>
 
-    <div id="target" onclick="hitTarget()"></div>
+</div>
 
-    <button onclick="startGame()">RESTART</button>
+<div class="game-area" id="spaceArea">
 
-  </div>
+<h2>🚀 Space Dodge</h2>
+<p>Dodge the asteroids. The longer you survive, the harder it gets.</p>
+
+<div class="space-stats">
+<span>Score: <span id="spaceScore">0</span></span>
+<span>High Score: <span id="highScore">0</span></span>
+</div>
+
+<div id="spaceGame">
+<div id="ship">🚀</div>
+</div>
+
+<p class="instructions">
+Desktop: use ← → or A/D. &nbsp; Mobile: drag your finger left and right.
+</p>
+
+<button id="spaceButton" onclick="startSpaceGame()">START GAME</button>
+
+</div>
 
 </main>
 
 <section class="section" id="about">
 
-  <h2 class="section-title">About Keldiq Games</h2>
+<h2 class="section-title">About Keldiq Games</h2>
 
-  <div class="game-card">
-
-    <p>
-      Keldiq Games is being built as a growing collection of quick,
-      fun games you can play instantly from any device.
-      New games and challenges are coming soon.
-    </p>
-
-  </div>
+<div class="game-card">
+<p>
+Keldiq Games is a growing collection of quick, fun games you can play
+instantly from your phone or computer. New games and challenges are
+being added regularly.
+</p>
+</div>
 
 </section>
 
 <footer>
-  © 2026 Keldiq Games. All rights reserved.
+© 2026 Keldiq Games. All rights reserved.
 </footer>
 
 <script>
 
-  let score = 0;
-  let time = 10;
-  let running = false;
-  let timer;
+/* TAP RUSH */
 
-  function startGame() {
+let tapScore=0;
+let tapTime=10;
+let tapRunning=false;
+let tapTimer;
 
-    clearInterval(timer);
+function hideGames(){
+document.getElementById("tapArea").style.display="none";
+document.getElementById("spaceArea").style.display="none";
+stopSpaceGame();
+}
 
-    score = 0;
-    time = 10;
-    running = true;
+function startTapRush(){
 
-    document.getElementById("score").textContent = score;
-    document.getElementById("time").textContent = time;
+stopSpaceGame();
 
-    const area = document.getElementById("gameArea");
+document.getElementById("spaceArea").style.display="none";
 
-    area.style.display = "block";
+clearInterval(tapTimer);
 
-    area.scrollIntoView({
-      behavior: "smooth"
-    });
+tapScore=0;
+tapTime=10;
+tapRunning=true;
 
-    timer = setInterval(function() {
+document.getElementById("tapScore").textContent=tapScore;
+document.getElementById("tapTime").textContent=tapTime;
 
-      time--;
+const area=document.getElementById("tapArea");
 
-      document.getElementById("time").textContent = time;
+area.style.display="block";
+area.scrollIntoView({behavior:"smooth"});
 
-      if (time <= 0) {
+tapTimer=setInterval(function(){
 
-        clearInterval(timer);
+tapTime--;
 
-        running = false;
+document.getElementById("tapTime").textContent=tapTime;
 
-        setTimeout(function() {
-          alert("Time! Your score was " + score + "!");
-        }, 100);
+if(tapTime<=0){
 
-      }
+clearInterval(tapTimer);
+tapRunning=false;
 
-    }, 1000);
+setTimeout(function(){
+alert("Time! Your score was "+tapScore+"!");
+},100);
 
-  }
+}
 
-  function hitTarget() {
+},1000);
 
-    if (!running) return;
+}
 
-    score++;
+function hitTarget(){
 
-    document.getElementById("score").textContent = score;
+if(!tapRunning)return;
 
-    const target = document.getElementById("target");
+tapScore++;
 
-    const x = Math.floor(Math.random() * 180) - 90;
-    const y = Math.floor(Math.random() * 50);
+document.getElementById("tapScore").textContent=tapScore;
 
-    target.style.transform =
-      "translate(" + x + "px," + y + "px)";
+const target=document.getElementById("target");
 
-  }
+const x=Math.floor(Math.random()*180)-90;
+const y=Math.floor(Math.random()*50);
+
+target.style.transform="translate("+x+"px,"+y+"px)";
+
+}
+
+
+/* SPACE DODGE */
+
+const spaceGame=document.getElementById("spaceGame");
+const ship=document.getElementById("ship");
+
+let spaceRunning=false;
+let spaceScore=0;
+let shipX=0;
+let animationId;
+let asteroidTimer;
+let scoreTimer;
+let asteroidSpeed=3;
+let spawnRate=850;
+let asteroids=[];
+
+let savedHighScore=Number(localStorage.getItem("keldiqSpaceHighScore"))||0;
+
+document.getElementById("highScore").textContent=savedHighScore;
+
+function openSpaceDodge(){
+
+clearInterval(tapTimer);
+tapRunning=false;
+
+document.getElementById("tapArea").style.display="none";
+
+const area=document.getElementById("spaceArea");
+
+area.style.display="block";
+area.scrollIntoView({behavior:"smooth"});
+
+}
+
+function startSpaceGame(){
+
+stopSpaceGame();
+
+spaceScore=0;
+asteroidSpeed=3;
+spawnRate=850;
+spaceRunning=true;
+
+document.getElementById("spaceScore").textContent=0;
+document.getElementById("spaceButton").textContent="RESTART";
+
+shipX=(spaceGame.clientWidth/2)-25;
+ship.style.left=shipX+"px";
+
+asteroidTimer=setInterval(createAsteroid,spawnRate);
+
+scoreTimer=setInterval(function(){
+
+if(!spaceRunning)return;
+
+spaceScore++;
+
+document.getElementById("spaceScore").textContent=spaceScore;
+
+if(spaceScore%10===0){
+asteroidSpeed+=0.35;
+}
+
+},500);
+
+gameLoop();
+
+}
+
+function createAsteroid(){
+
+if(!spaceRunning)return;
+
+const asteroid=document.createElement("div");
+
+asteroid.className="asteroid";
+asteroid.textContent="☄️";
+
+asteroid.style.left=
+Math.random()*(spaceGame.clientWidth-45)+"px";
+
+asteroid.style.top="-50px";
+
+spaceGame.appendChild(asteroid);
+
+asteroids.push({
+element:asteroid,
+y:-50
+});
+
+}
+
+function gameLoop(){
+
+if(!spaceRunning)return;
+
+const shipRect=ship.getBoundingClientRect();
+
+for(let i=asteroids.length-1;i>=0;i--){
+
+const a=asteroids[i];
+
+a.y+=asteroidSpeed;
+a.element.style.top=a.y+"px";
+
+const asteroidRect=a.element.getBoundingClientRect();
+
+if(
+asteroidRect.left<shipRect.right-10 &&
+asteroidRect.right>shipRect.left+10 &&
+asteroidRect.top<shipRect.bottom-8 &&
+asteroidRect.bottom>shipRect.top+8
+){
+gameOver();
+return;
+}
+
+if(a.y>spaceGame.clientHeight+50){
+
+a.element.remove();
+asteroids.splice(i,1);
+
+}
+
+}
+
+animationId=requestAnimationFrame(gameLoop);
+
+}
+
+function gameOver(){
+
+spaceRunning=false;
+
+clearInterval(asteroidTimer);
+clearInterval(scoreTimer);
+cancelAnimationFrame(animationId);
+
+if(spaceScore>savedHighScore){
+
+savedHighScore=spaceScore;
+
+localStorage.setItem(
+"keldiqSpaceHighScore",
+savedHighScore
+);
+
+document.getElementById("highScore").textContent=savedHighScore;
+
+}
+
+document.getElementById("spaceButton").textContent="PLAY AGAIN";
+
+setTimeout(function(){
+alert("Game Over! Score: "+spaceScore);
+},100);
+
+}
+
+function stopSpaceGame(){
+
+spaceRunning=false;
+
+clearInterval(asteroidTimer);
+clearInterval(scoreTimer);
+cancelAnimationFrame(animationId);
+
+asteroids.forEach(function(a){
+a.element.remove();
+});
+
+asteroids=[];
+
+}
+
+function moveShip(amount){
+
+if(!spaceRunning)return;
+
+shipX+=amount;
+
+if(shipX<0)shipX=0;
+
+if(shipX>spaceGame.clientWidth-50){
+shipX=spaceGame.clientWidth-50;
+}
+
+ship.style.left=shipX+"px";
+
+}
+
+document.addEventListener("keydown",function(e){
+
+if(!spaceRunning)return;
+
+if(e.key==="ArrowLeft" || e.key.toLowerCase()==="a"){
+e.preventDefault();
+moveShip(-25);
+}
+
+if(e.key==="ArrowRight" || e.key.toLowerCase()==="d"){
+e.preventDefault();
+moveShip(25);
+}
+
+});
+
+function setShipFromPointer(clientX){
+
+if(!spaceRunning)return;
+
+const rect=spaceGame.getBoundingClientRect();
+
+shipX=clientX-rect.left-25;
+
+if(shipX<0)shipX=0;
+
+if(shipX>spaceGame.clientWidth-50){
+shipX=spaceGame.clientWidth-50;
+}
+
+ship.style.left=shipX+"px";
+
+}
+
+spaceGame.addEventListener("pointerdown",function(e){
+
+setShipFromPointer(e.clientX);
+
+});
+
+spaceGame.addEventListener("pointermove",function(e){
+
+if(e.buttons===1 || e.pointerType==="touch"){
+setShipFromPointer(e.clientX);
+}
+
+});
 
 </script>
 
