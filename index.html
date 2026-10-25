@@ -226,10 +226,15 @@ font-size:14px;
 
 /* GEM DROP */
 
-#gemBoard{
+#gemBoardWrap{
+position:relative;
 width:min(92vw,520px);
-aspect-ratio:1/1;
 margin:25px auto 12px;
+}
+
+#gemBoard{
+width:100%;
+aspect-ratio:1/1;
 display:grid;
 grid-template-columns:repeat(8,1fr);
 gap:5px;
@@ -240,6 +245,7 @@ border:2px solid rgba(77,141,255,.45);
 box-shadow:0 0 35px rgba(55,125,255,.14);
 user-select:none;
 touch-action:manipulation;
+overflow:hidden;
 }
 
 .gem{
@@ -251,28 +257,96 @@ font-size:clamp(24px,6vw,42px);
 cursor:pointer;
 background:rgba(255,255,255,.065);
 border:1px solid rgba(255,255,255,.08);
-transition:transform .12s,background .12s;
+transition:transform .12s,background .12s,box-shadow .12s;
 }
 
 .gem:hover{
 transform:scale(1.08);
 background:rgba(255,255,255,.12);
+box-shadow:0 0 16px rgba(110,160,255,.25);
+}
+
+.gem-clearing{
+animation:gemClear .28s ease forwards;
+pointer-events:none;
+}
+
+.gem-dropping{
+animation:gemDrop .38s cubic-bezier(.2,.9,.35,1.2);
+}
+
+.big-gem{
+animation:bigGemPulse .4s ease;
 }
 
 #gemMessage{
-min-height:32px;
+min-height:34px;
 font-size:18px;
 font-weight:bold;
 color:#8fb7ff;
 margin-top:10px;
+transition:.2s;
+}
+
+#gemMessage.big-message{
+font-size:23px;
+color:#fff;
+text-shadow:0 0 15px #5d8dff;
+transform:scale(1.06);
 }
 
 .combo-pop{
-animation:comboPulse .35s ease;
+animation:comboPulse .4s ease;
+color:#fff;
+text-shadow:0 0 12px #5d8dff;
+}
+
+#gemEffect{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+font-size:clamp(30px,8vw,60px);
+font-weight:900;
+pointer-events:none;
+opacity:0;
+z-index:20;
+text-shadow:0 0 22px rgba(85,145,255,.9);
+}
+
+#gemEffect.show{
+animation:effectBurst .75s ease forwards;
+}
+
+@keyframes gemClear{
+0%{transform:scale(1);opacity:1}
+45%{transform:scale(1.35) rotate(8deg);filter:brightness(1.8)}
+100%{transform:scale(0);opacity:0}
+}
+
+@keyframes gemDrop{
+0%{transform:translateY(-65px) scale(.8);opacity:.2}
+70%{transform:translateY(6px) scale(1.05);opacity:1}
+100%{transform:translateY(0) scale(1);opacity:1}
+}
+
+@keyframes bigGemPulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.16);filter:brightness(1.6)}
+100%{transform:scale(1)}
 }
 
 @keyframes comboPulse{
-50%{transform:scale(1.18)}
+0%{transform:scale(1)}
+50%{transform:scale(1.3)}
+100%{transform:scale(1)}
+}
+
+@keyframes effectBurst{
+0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+25%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}
+70%{opacity:1;transform:translate(-50%,-65%) scale(1)}
+100%{opacity:0;transform:translate(-50%,-90%) scale(.8)}
 }
 
 footer{
@@ -342,7 +416,7 @@ Play on your phone or computer and see how high you can score.
 <div class="game-card">
 <div class="game-icon">💎</div>
 <h3>Gem Drop</h3>
-<p>Clear matching gems, trigger fresh drops and chase an endless high score.</p>
+<p>Clear matching gems, build combos and chase an endless high score.</p>
 <button onclick="openGemDrop()">PLAY NOW</button>
 </div>
 
@@ -406,7 +480,7 @@ Desktop: use ← → or A/D. Mobile: drag your finger left and right.
 
 <div class="game-area" id="gemArea">
 <h2>💎 Gem Drop</h2>
-<p>Tap 2 or more connected matching gems. New gems drop in after every match!</p>
+<p>Tap 2 or more connected matching gems. Bigger groups earn huge points!</p>
 
 <div class="gem-stats">
 <span>Score: <span id="gemScore">0</span></span>
@@ -414,7 +488,10 @@ Desktop: use ← → or A/D. Mobile: drag your finger left and right.
 <span>Best: <span id="gemHighScore">0</span></span>
 </div>
 
+<div id="gemBoardWrap">
 <div id="gemBoard"></div>
+<div id="gemEffect"></div>
+</div>
 
 <div id="gemMessage">
 Clear groups of matching gems to keep building your score.
@@ -427,7 +504,6 @@ Clear groups of matching gems to keep building your score.
 
 <section class="section" id="about">
 <h2 class="section-title">About Keldiq Games</h2>
-
 <div class="game-card">
 <p>
 Keldiq Games is a growing collection of quick, fun games you can play
@@ -526,7 +602,6 @@ target.style.transform="translate("+x+"px,"+y+"px)";
 /* BRAIN BLITZ */
 
 const brainQuestions=[
-
 {q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Mercury"],correct:1},
 {q:"What is 12 × 8?",a:["86","92","96","108"],correct:2},
 {q:"Which ocean is the largest?",a:["Atlantic","Indian","Pacific","Arctic"],correct:2},
@@ -537,7 +612,6 @@ const brainQuestions=[
 {q:"Which gas do humans need to breathe?",a:["Hydrogen","Nitrogen","Oxygen","Helium"],correct:2},
 {q:"How many minutes are in two hours?",a:["100","110","120","140"],correct:2},
 {q:"Which is the largest planet in our solar system?",a:["Earth","Saturn","Neptune","Jupiter"],correct:3},
-
 {q:"What is 15 + 27?",a:["32","42","52","38"],correct:1},
 {q:"Which country is home to the Great Pyramids of Giza?",a:["Mexico","Egypt","Greece","India"],correct:1},
 {q:"How many days are in a leap year?",a:["364","365","366","367"],correct:2},
@@ -548,7 +622,6 @@ const brainQuestions=[
 {q:"Which mammal can truly fly?",a:["Flying squirrel","Bat","Penguin","Ostrich"],correct:1},
 {q:"What color do blue and yellow make when mixing paint?",a:["Purple","Orange","Green","Red"],correct:2},
 {q:"How many players from one team are on the field in American football?",a:["9","10","11","12"],correct:2},
-
 {q:"Which planet is closest to the Sun?",a:["Earth","Venus","Mercury","Mars"],correct:2},
 {q:"What is 100 ÷ 4?",a:["20","25","30","40"],correct:1},
 {q:"Which organ pumps blood through the human body?",a:["Brain","Lungs","Heart","Kidney"],correct:2},
@@ -559,7 +632,6 @@ const brainQuestions=[
 {q:"Which animal is known as the king of the jungle?",a:["Tiger","Lion","Bear","Wolf"],correct:1},
 {q:"Which planet is famous for its rings?",a:["Mars","Venus","Saturn","Mercury"],correct:2},
 {q:"What is 50% of 200?",a:["50","75","100","150"],correct:2},
-
 {q:"Which language is primarily spoken in Brazil?",a:["Spanish","Portuguese","French","Italian"],correct:1},
 {q:"How many legs does a spider have?",a:["6","8","10","12"],correct:1},
 {q:"What is the boiling point of water at sea level in Celsius?",a:["50°","75°","100°","120°"],correct:2},
@@ -570,7 +642,6 @@ const brainQuestions=[
 {q:"Which animal is the largest living animal?",a:["Elephant","Blue whale","Giraffe","Great white shark"],correct:1},
 {q:"How many hours are in one day?",a:["12","18","24","36"],correct:2},
 {q:"Which season follows summer in the Northern Hemisphere?",a:["Spring","Winter","Autumn","Monsoon"],correct:2},
-
 {q:"What is the square root of 64?",a:["6","7","8","9"],correct:2},
 {q:"Which country is shaped like a boot?",a:["Spain","Italy","Portugal","Greece"],correct:1},
 {q:"How many colors are traditionally listed in a rainbow?",a:["5","6","7","8"],correct:2},
@@ -581,7 +652,6 @@ const brainQuestions=[
 {q:"How many centimeters are in one meter?",a:["10","50","100","1000"],correct:2},
 {q:"What is the capital of Australia?",a:["Sydney","Melbourne","Canberra","Perth"],correct:2},
 {q:"Which part of a plant typically absorbs water from soil?",a:["Flower","Leaf","Roots","Fruit"],correct:2},
-
 {q:"What is 13 × 5?",a:["55","60","65","70"],correct:2},
 {q:"Which is the largest organ of the human body?",a:["Heart","Liver","Skin","Lungs"],correct:2},
 {q:"Which planet is sometimes called Earth's sister planet?",a:["Venus","Mars","Jupiter","Saturn"],correct:0},
@@ -592,7 +662,6 @@ const brainQuestions=[
 {q:"How many degrees are in a right angle?",a:["45","60","90","180"],correct:2},
 {q:"What is the capital of Italy?",a:["Milan","Venice","Rome","Naples"],correct:2},
 {q:"Which natural satellite orbits Earth?",a:["Mars","Moon","Venus","Sun"],correct:1},
-
 {q:"What is 6 cubed?",a:["36","108","216","256"],correct:2},
 {q:"Which element has the chemical symbol O?",a:["Gold","Oxygen","Osmium","Iron"],correct:1},
 {q:"What is the largest species of big cat?",a:["Lion","Tiger","Leopard","Cheetah"],correct:1},
@@ -603,7 +672,6 @@ const brainQuestions=[
 {q:"What is the capital of Germany?",a:["Munich","Frankfurt","Berlin","Hamburg"],correct:2},
 {q:"Which planet is farthest from the Sun among the eight planets?",a:["Saturn","Uranus","Neptune","Jupiter"],correct:2},
 {q:"How many quarters make one U.S. dollar?",a:["2","3","4","5"],correct:2},
-
 {q:"What is 17 + 19?",a:["34","36","38","40"],correct:1},
 {q:"Which animal is famous for black and white stripes?",a:["Panda","Zebra","Skunk","Badger"],correct:1},
 {q:"What is the capital of Mexico?",a:["Cancun","Mexico City","Monterrey","Tijuana"],correct:1},
@@ -614,7 +682,6 @@ const brainQuestions=[
 {q:"Which animal is known for carrying its young in a pouch?",a:["Kangaroo","Tiger","Elephant","Wolf"],correct:0},
 {q:"What is 10% of 500?",a:["25","50","75","100"],correct:1},
 {q:"Which city is the capital of the United Kingdom?",a:["Manchester","Liverpool","London","Edinburgh"],correct:2},
-
 {q:"How many teeth does a typical adult human have including wisdom teeth?",a:["28","30","32","36"],correct:2},
 {q:"What is 14 × 6?",a:["74","84","94","104"],correct:1},
 {q:"Which continent contains the Sahara Desert?",a:["Asia","Africa","Australia","South America"],correct:1},
@@ -625,7 +692,6 @@ const brainQuestions=[
 {q:"Which country is famous for the Taj Mahal?",a:["India","China","Thailand","Japan"],correct:0},
 {q:"What do bees primarily collect from flowers to make honey?",a:["Sand","Nectar","Dew","Sap"],correct:1},
 {q:"How many planets are in our solar system?",a:["7","8","9","10"],correct:1},
-
 {q:"What is 19 × 3?",a:["47","57","67","77"],correct:1},
 {q:"Which continent is Egypt primarily located in?",a:["Africa","Asia","Europe","South America"],correct:0},
 {q:"Which organ is primarily responsible for breathing?",a:["Heart","Lungs","Kidneys","Stomach"],correct:1},
@@ -636,7 +702,6 @@ const brainQuestions=[
 {q:"What is H2O commonly called?",a:["Salt","Water","Oxygen","Hydrogen"],correct:1},
 {q:"Which direction is opposite east?",a:["North","South","West","Northeast"],correct:2},
 {q:"How many weeks are approximately in one year?",a:["48","50","52","54"],correct:2},
-
 {q:"What is 16 × 4?",a:["54","64","74","84"],correct:1},
 {q:"Which country is home to the city of Rome?",a:["France","Italy","Spain","Austria"],correct:1},
 {q:"Which animal is known for its long trunk?",a:["Rhino","Elephant","Hippo","Giraffe"],correct:1},
@@ -647,7 +712,6 @@ const brainQuestions=[
 {q:"Which part of the body contains the brain?",a:["Chest","Abdomen","Skull","Leg"],correct:2},
 {q:"What is 45 + 55?",a:["90","95","100","110"],correct:2},
 {q:"Which animal is commonly called man's best friend?",a:["Cat","Dog","Horse","Dolphin"],correct:1},
-
 {q:"How many hours are in two days?",a:["24","36","48","72"],correct:2},
 {q:"What is 20 × 5?",a:["80","90","100","120"],correct:2},
 {q:"Which country is directly north of the United States?",a:["Mexico","Canada","Cuba","Brazil"],correct:1},
@@ -658,7 +722,6 @@ const brainQuestions=[
 {q:"Which continent is the United States located in?",a:["Europe","Asia","North America","South America"],correct:2},
 {q:"What is 64 ÷ 4?",a:["12","14","16","18"],correct:2},
 {q:"Which device is used to measure temperature?",a:["Barometer","Thermometer","Compass","Ruler"],correct:1}
-
 ];
 
 let brainScore=0;
@@ -669,38 +732,25 @@ let brainTimer=null;
 let currentBrainQuestion=null;
 let brainDeck=[];
 
-let brainHighScore=
-Number(localStorage.getItem("keldiqBrainHighScore"))||0;
-
+let brainHighScore=Number(localStorage.getItem("keldiqBrainHighScore"))||0;
 document.getElementById("brainHighScore").textContent=brainHighScore;
 
 function shuffleArray(array){
-
 for(let i=array.length-1;i>0;i--){
-
 const j=Math.floor(Math.random()*(i+1));
 [array[i],array[j]]=[array[j],array[i]];
-
 }
-
 return array;
 }
 
 function createBrainDeck(){
-
 brainDeck=[];
-
-for(let i=0;i<brainQuestions.length;i++){
-brainDeck.push(i);
-}
-
+for(let i=0;i<brainQuestions.length;i++)brainDeck.push(i);
 shuffleArray(brainDeck);
 }
 
 function openBrainBlitz(){
-
 closeOtherGames("brain");
-
 const area=document.getElementById("brainArea");
 area.style.display="block";
 area.scrollIntoView({behavior:"smooth"});
@@ -731,14 +781,9 @@ area.scrollIntoView({behavior:"smooth"});
 nextBrainQuestion();
 
 brainTimer=setInterval(function(){
-
 brainTime--;
 document.getElementById("brainTime").textContent=brainTime;
-
-if(brainTime<=0){
-endBrainBlitz("Time's up!");
-}
-
+if(brainTime<=0)endBrainBlitz("Time's up!");
 },1000);
 }
 
@@ -757,23 +802,19 @@ currentBrainQuestion=brainQuestions[questionIndex];
 document.getElementById("question").textContent=currentBrainQuestion.q;
 
 for(let i=0;i<4;i++){
-
 const button=document.getElementById("answer"+i);
-
 button.textContent=currentBrainQuestion.a[i];
 button.disabled=false;
-
 }
 }
 
 function answerQuestion(index){
 
-if(!brainRunning || !currentBrainQuestion)return;
+if(!brainRunning||!currentBrainQuestion)return;
 
 if(index===currentBrainQuestion.correct){
 
 brainStreak++;
-
 let points=10;
 
 if(brainStreak>=3)points+=5;
@@ -781,18 +822,13 @@ if(brainStreak>=5)points+=5;
 if(brainStreak>=10)points+=10;
 
 brainScore+=points;
-
-document.getElementById("brainFeedback").textContent=
-"✓ Correct! +"+points;
+document.getElementById("brainFeedback").textContent="✓ Correct! +"+points;
 
 }else{
 
 brainStreak=0;
-
 document.getElementById("brainFeedback").textContent=
-"✗ Wrong! Correct answer: "+
-currentBrainQuestion.a[currentBrainQuestion.correct];
-
+"✗ Wrong! Correct answer: "+currentBrainQuestion.a[currentBrainQuestion.correct];
 }
 
 document.getElementById("brainScore").textContent=brainScore;
@@ -809,26 +845,16 @@ brainRunning=false;
 clearInterval(brainTimer);
 
 if(brainScore>brainHighScore){
-
 brainHighScore=brainScore;
-
-localStorage.setItem(
-"keldiqBrainHighScore",
-brainHighScore
-);
-
+localStorage.setItem("keldiqBrainHighScore",brainHighScore);
 document.getElementById("brainHighScore").textContent=brainHighScore;
 }
 
-document.getElementById("question").textContent=
-message+" Final score: "+brainScore;
-
+document.getElementById("question").textContent=message+" Final score: "+brainScore;
 document.getElementById("brainFeedback").textContent=
 "Questions answered: "+(brainQuestions.length-brainDeck.length);
 
-for(let i=0;i<4;i++){
-document.getElementById("answer"+i).disabled=true;
-}
+for(let i=0;i<4;i++)document.getElementById("answer"+i).disabled=true;
 
 document.getElementById("brainButton").textContent="PLAY AGAIN";
 }
@@ -852,9 +878,7 @@ let scoreTimer;
 let asteroidSpeed=3;
 let asteroids=[];
 
-let savedHighScore=
-Number(localStorage.getItem("keldiqSpaceHighScore"))||0;
-
+let savedHighScore=Number(localStorage.getItem("keldiqSpaceHighScore"))||0;
 document.getElementById("highScore").textContent=savedHighScore;
 
 function openSpaceDodge(){
@@ -887,17 +911,10 @@ ship.style.left=shipX+"px";
 asteroidTimer=setInterval(createAsteroid,850);
 
 scoreTimer=setInterval(function(){
-
 if(!spaceRunning)return;
-
 spaceScore++;
-
 document.getElementById("spaceScore").textContent=spaceScore;
-
-if(spaceScore%10===0){
-asteroidSpeed+=0.35;
-}
-
+if(spaceScore%10===0)asteroidSpeed+=.35;
 },500);
 
 gameLoop();
@@ -908,21 +925,14 @@ function createAsteroid(){
 if(!spaceRunning)return;
 
 const asteroid=document.createElement("div");
-
 asteroid.className="asteroid";
 asteroid.textContent="☄️";
-
-asteroid.style.left=
-Math.random()*(spaceGame.clientWidth-45)+"px";
-
+asteroid.style.left=Math.random()*(spaceGame.clientWidth-45)+"px";
 asteroid.style.top="-50px";
 
 spaceGame.appendChild(asteroid);
 
-asteroids.push({
-element:asteroid,
-y:-50
-});
+asteroids.push({element:asteroid,y:-50});
 }
 
 function gameLoop(){
@@ -951,10 +961,8 @@ return;
 }
 
 if(a.y>spaceGame.clientHeight+50){
-
 a.element.remove();
 asteroids.splice(i,1);
-
 }
 }
 
@@ -964,20 +972,13 @@ animationId=requestAnimationFrame(gameLoop);
 function gameOver(){
 
 spaceRunning=false;
-
 clearInterval(asteroidTimer);
 clearInterval(scoreTimer);
 cancelAnimationFrame(animationId);
 
 if(spaceScore>savedHighScore){
-
 savedHighScore=spaceScore;
-
-localStorage.setItem(
-"keldiqSpaceHighScore",
-savedHighScore
-);
-
+localStorage.setItem("keldiqSpaceHighScore",savedHighScore);
 document.getElementById("highScore").textContent=savedHighScore;
 }
 
@@ -996,10 +997,7 @@ clearInterval(asteroidTimer);
 clearInterval(scoreTimer);
 cancelAnimationFrame(animationId);
 
-asteroids.forEach(function(a){
-a.element.remove();
-});
-
+asteroids.forEach(function(a){a.element.remove();});
 asteroids=[];
 }
 
@@ -1010,10 +1008,7 @@ if(!spaceRunning)return;
 shipX+=amount;
 
 if(shipX<0)shipX=0;
-
-if(shipX>spaceGame.clientWidth-50){
-shipX=spaceGame.clientWidth-50;
-}
+if(shipX>spaceGame.clientWidth-50)shipX=spaceGame.clientWidth-50;
 
 ship.style.left=shipX+"px";
 }
@@ -1022,16 +1017,15 @@ document.addEventListener("keydown",function(e){
 
 if(!spaceRunning)return;
 
-if(e.key==="ArrowLeft" || e.key.toLowerCase()==="a"){
+if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a"){
 e.preventDefault();
 moveShip(-25);
 }
 
-if(e.key==="ArrowRight" || e.key.toLowerCase()==="d"){
+if(e.key==="ArrowRight"||e.key.toLowerCase()==="d"){
 e.preventDefault();
 moveShip(25);
 }
-
 });
 
 function setShipFromPointer(clientX){
@@ -1043,10 +1037,7 @@ const rect=spaceGame.getBoundingClientRect();
 shipX=clientX-rect.left-25;
 
 if(shipX<0)shipX=0;
-
-if(shipX>spaceGame.clientWidth-50){
-shipX=spaceGame.clientWidth-50;
-}
+if(shipX>spaceGame.clientWidth-50)shipX=spaceGame.clientWidth-50;
 
 ship.style.left=shipX+"px";
 }
@@ -1056,11 +1047,7 @@ setShipFromPointer(e.clientX);
 });
 
 spaceGame.addEventListener("pointermove",function(e){
-
-if(e.buttons===1 || e.pointerType==="touch"){
-setShipFromPointer(e.clientX);
-}
-
+if(e.buttons===1||e.pointerType==="touch")setShipFromPointer(e.clientX);
 });
 
 /* GEM DROP */
@@ -1068,24 +1055,16 @@ setShipFromPointer(e.clientX);
 const GEM_ROWS=8;
 const GEM_COLS=8;
 
-const GEM_TYPES=[
-"💎",
-"🔷",
-"🔶",
-"💚",
-"💜",
-"❤️"
-];
+const GEM_TYPES=["💎","🔷","🔶","💚","💜","❤️"];
 
 let gemBoard=[];
 let gemScore=0;
 let gemCombo=1;
 let gemRunning=false;
 let gemMoves=0;
+let gemBusy=false;
 
-let gemHighScore=
-Number(localStorage.getItem("keldiqGemHighScore"))||0;
-
+let gemHighScore=Number(localStorage.getItem("keldiqGemHighScore"))||0;
 document.getElementById("gemHighScore").textContent=gemHighScore;
 
 function openGemDrop(){
@@ -1093,13 +1072,10 @@ function openGemDrop(){
 closeOtherGames("gem");
 
 const area=document.getElementById("gemArea");
-
 area.style.display="block";
 area.scrollIntoView({behavior:"smooth"});
 
-if(!gemRunning){
-startGemDrop();
-}
+if(!gemRunning)startGemDrop();
 }
 
 function randomGem(){
@@ -1121,9 +1097,7 @@ newRow.push(randomGem());
 gemBoard.push(newRow);
 }
 
-if(!hasGemMoves()){
-createGemBoard();
-}
+if(!hasGemMoves())createGemBoard();
 }
 
 function startGemDrop(){
@@ -1134,22 +1108,24 @@ gemScore=0;
 gemCombo=1;
 gemMoves=0;
 gemRunning=true;
+gemBusy=false;
 
 document.getElementById("gemScore").textContent="0";
 document.getElementById("gemCombo").textContent="1x";
 document.getElementById("gemMessage").textContent=
 "Tap 2 or more connected matching gems.";
 
+document.getElementById("gemMessage").classList.remove("big-message");
 document.getElementById("gemButton").textContent="RESTART";
 
 const area=document.getElementById("gemArea");
 area.style.display="block";
 
 createGemBoard();
-renderGemBoard();
+renderGemBoard(true);
 }
 
-function renderGemBoard(){
+function renderGemBoard(animateDrop=false){
 
 const board=document.getElementById("gemBoard");
 board.innerHTML="";
@@ -1161,7 +1137,15 @@ for(let col=0;col<GEM_COLS;col++){
 const cell=document.createElement("div");
 
 cell.className="gem";
+
+if(animateDrop){
+cell.classList.add("gem-dropping");
+cell.style.animationDelay=((row*20)+(col*12))+"ms";
+}
+
 cell.textContent=GEM_TYPES[gemBoard[row][col]];
+cell.dataset.row=row;
+cell.dataset.col=col;
 
 cell.addEventListener("click",function(){
 selectGemGroup(row,col);
@@ -1201,9 +1185,7 @@ continue;
 
 visited[row][col]=true;
 
-if(gemBoard[row][col]!==type){
-continue;
-}
+if(gemBoard[row][col]!==type)continue;
 
 group.push([row,col]);
 
@@ -1218,29 +1200,76 @@ return group;
 
 function selectGemGroup(row,col){
 
-if(!gemRunning)return;
+if(!gemRunning||gemBusy)return;
 
 const group=getGemGroup(row,col);
+
+const message=document.getElementById("gemMessage");
 
 if(group.length<2){
 
 gemCombo=1;
 
 document.getElementById("gemCombo").textContent="1x";
-document.getElementById("gemMessage").textContent=
-"Find 2 or more matching gems touching each other.";
+
+message.classList.remove("big-message");
+message.textContent="Find 2 or more matching gems touching each other.";
 
 return;
 }
 
-const basePoints=
-group.length*group.length*10;
+gemBusy=true;
 
-const earned=
-basePoints*gemCombo;
+const basePoints=group.length*group.length*10;
+const earned=basePoints*gemCombo;
 
 gemScore+=earned;
 gemMoves++;
+
+document.getElementById("gemScore").textContent=gemScore;
+
+if(group.length>=8){
+message.textContent="💥 MEGA CLEAR! "+group.length+" GEMS! +"+earned;
+message.classList.add("big-message");
+showGemEffect("💥 MEGA!");
+}
+else if(group.length>=6){
+message.textContent="🔥 HUGE MATCH! "+group.length+" GEMS! +"+earned;
+message.classList.add("big-message");
+showGemEffect("🔥 HUGE!");
+}
+else if(group.length>=4){
+message.textContent="✨ GREAT MATCH! +"+earned;
+message.classList.add("big-message");
+showGemEffect("✨ +"+earned);
+}
+else{
+message.textContent=group.length+" gems cleared! +"+earned;
+message.classList.remove("big-message");
+}
+
+if(group.length>=4){
+
+gemCombo++;
+
+const comboDisplay=document.getElementById("gemCombo");
+
+comboDisplay.textContent=gemCombo+"x";
+comboDisplay.classList.remove("combo-pop");
+
+void comboDisplay.offsetWidth;
+
+comboDisplay.classList.add("combo-pop");
+
+}else{
+
+gemCombo=1;
+document.getElementById("gemCombo").textContent="1x";
+}
+
+animateGemClear(group);
+
+setTimeout(function(){
 
 group.forEach(function(position){
 
@@ -1250,52 +1279,57 @@ const c=position[1];
 gemBoard[r][c]=null;
 });
 
-document.getElementById("gemScore").textContent=gemScore;
-
-document.getElementById("gemMessage").textContent=
-group.length+" gems cleared! +"+earned+" points";
-
-if(group.length>=4){
-
-gemCombo++;
-
-document.getElementById("gemCombo").textContent=
-gemCombo+"x";
-
-const comboDisplay=
-document.getElementById("gemCombo");
-
-comboDisplay.classList.remove("combo-pop");
-void comboDisplay.offsetWidth;
-comboDisplay.classList.add("combo-pop");
-
-}else{
-
-gemCombo=1;
-
-document.getElementById("gemCombo").textContent="1x";
-}
-
 applyGemGravity();
 
-setTimeout(function(){
-
-renderGemBoard();
-
-/* If the new board somehow has no matches,
-   reshuffle it so the endless game can continue. */
+renderGemBoard(true);
 
 if(!hasGemMoves()){
 reshuffleGemBoard();
 }
 
-},120);
-
 updateGemHighScore();
+
+gemBusy=false;
+
+},300);
 }
 
-/* Existing gems fall to the bottom.
-   NEW gems are generated above them. */
+function animateGemClear(group){
+
+const cells=document.querySelectorAll("#gemBoard .gem");
+
+group.forEach(function(position){
+
+const row=position[0];
+const col=position[1];
+const index=row*GEM_COLS+col;
+const cell=cells[index];
+
+if(cell){
+cell.classList.add("gem-clearing");
+
+if(group.length>=6){
+cell.classList.add("big-gem");
+}
+}
+
+});
+}
+
+function showGemEffect(text){
+
+const effect=document.getElementById("gemEffect");
+
+effect.textContent=text;
+effect.classList.remove("show");
+
+void effect.offsetWidth;
+
+effect.classList.add("show");
+}
+
+/* Existing gems fall down.
+   Every empty position is filled with a NEW random gem. */
 
 function applyGemGravity(){
 
@@ -1316,19 +1350,13 @@ for(let row=GEM_ROWS-1;row>=0;row--){
 const index=GEM_ROWS-1-row;
 
 if(index<remaining.length){
-
 gemBoard[row][col]=remaining[index];
-
 }else{
-
 gemBoard[row][col]=randomGem();
-
 }
 
 }
-
 }
-
 }
 
 function hasGemMoves(){
@@ -1339,17 +1367,11 @@ for(let col=0;col<GEM_COLS;col++){
 
 const current=gemBoard[row][col];
 
-if(
-col+1<GEM_COLS &&
-gemBoard[row][col+1]===current
-){
+if(col+1<GEM_COLS&&gemBoard[row][col+1]===current){
 return true;
 }
 
-if(
-row+1<GEM_ROWS &&
-gemBoard[row+1][col]===current
-){
+if(row+1<GEM_ROWS&&gemBoard[row+1][col]===current){
 return true;
 }
 
@@ -1373,10 +1395,12 @@ gemBoard[row][col]=randomGem();
 
 }while(!hasGemMoves());
 
-renderGemBoard();
+renderGemBoard(true);
 
 document.getElementById("gemMessage").textContent=
-"🔀 No matches were left, so the board was reshuffled!";
+"🔀 No matches left — board reshuffled!";
+
+showGemEffect("🔀 SHUFFLE!");
 }
 
 function updateGemHighScore(){
@@ -1385,13 +1409,9 @@ if(gemScore>gemHighScore){
 
 gemHighScore=gemScore;
 
-localStorage.setItem(
-"keldiqGemHighScore",
-gemHighScore
-);
+localStorage.setItem("keldiqGemHighScore",gemHighScore);
 
-document.getElementById("gemHighScore").textContent=
-gemHighScore;
+document.getElementById("gemHighScore").textContent=gemHighScore;
 }
 }
 
