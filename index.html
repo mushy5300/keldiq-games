@@ -255,7 +255,6 @@ nav{display:none}
 
 <header>
 <div class="logo">KELDIQ <span>GAMES</span></div>
-
 <nav>
 <a href="#games">Games</a>
 <a href="#about">About</a>
@@ -264,7 +263,6 @@ nav{display:none}
 
 <section class="hero">
 <h1>PLAY. COMPETE.<br><span>BEAT YOUR SCORE.</span></h1>
-
 <p>
 Instant free games with no downloads.
 Play on your phone or computer and see how high you can score.
@@ -287,7 +285,7 @@ Play on your phone or computer and see how high you can score.
 <div class="game-card">
 <div class="game-icon">🧠</div>
 <h3>Brain Blitz</h3>
-<p>Answer fast, build a streak and score as many points as you can.</p>
+<p>120 questions. No repeats. Build a streak and beat your high score.</p>
 <button onclick="openBrainBlitz()">PLAY NOW</button>
 </div>
 
@@ -310,22 +308,15 @@ Play on your phone or computer and see how high you can score.
 <!-- TAP RUSH -->
 
 <div class="game-area" id="tapArea">
-
 <h2>🎯 Tap Rush</h2>
 <p>Click or tap the target as fast as you can!</p>
 
-<div class="score">
-Score: <span id="tapScore">0</span>
-</div>
-
-<div class="timer">
-Time: <span id="tapTime">10</span> seconds
-</div>
+<div class="score">Score: <span id="tapScore">0</span></div>
+<div class="timer">Time: <span id="tapTime">10</span> seconds</div>
 
 <div id="target" onclick="hitTarget()"></div>
 
 <button onclick="startTapRush()">RESTART</button>
-
 </div>
 
 <!-- BRAIN BLITZ -->
@@ -333,7 +324,7 @@ Time: <span id="tapTime">10</span> seconds
 <div class="game-area" id="brainArea">
 
 <h2>🧠 Brain Blitz</h2>
-<p>You have 60 seconds. Correct answers build your streak and earn bonus points.</p>
+<p>60 seconds. 120 possible questions. No question repeats during a round.</p>
 
 <div class="brain-stats">
 <span>Score: <span id="brainScore">0</span></span>
@@ -344,17 +335,13 @@ Time: <span id="tapTime">10</span> seconds
 
 <div id="questionBox">
 
-<div id="question">
-Press START to begin.
-</div>
+<div id="question">Press START to begin.</div>
 
 <div class="answers">
-
 <button class="answer-btn" id="answer0" onclick="answerQuestion(0)">—</button>
 <button class="answer-btn" id="answer1" onclick="answerQuestion(1)">—</button>
 <button class="answer-btn" id="answer2" onclick="answerQuestion(2)">—</button>
 <button class="answer-btn" id="answer3" onclick="answerQuestion(3)">—</button>
-
 </div>
 
 <div id="brainFeedback"></div>
@@ -382,7 +369,7 @@ Press START to begin.
 </div>
 
 <p class="instructions">
-Desktop: use ← → or A/D. &nbsp; Mobile: drag your finger left and right.
+Desktop: use ← → or A/D. Mobile: drag your finger left and right.
 </p>
 
 <button id="spaceButton" onclick="startSpaceGame()">START GAME</button>
@@ -392,7 +379,6 @@ Desktop: use ← → or A/D. &nbsp; Mobile: drag your finger left and right.
 </main>
 
 <section class="section" id="about">
-
 <h2 class="section-title">About Keldiq Games</h2>
 
 <div class="game-card">
@@ -402,7 +388,6 @@ instantly from your phone or computer. New games and challenges are
 being added regularly.
 </p>
 </div>
-
 </section>
 
 <footer>
@@ -447,7 +432,6 @@ let tapTimer;
 function startTapRush(){
 
 closeOtherGames("tap");
-
 clearInterval(tapTimer);
 
 tapScore=0;
@@ -458,29 +442,24 @@ document.getElementById("tapScore").textContent=tapScore;
 document.getElementById("tapTime").textContent=tapTime;
 
 const area=document.getElementById("tapArea");
-
 area.style.display="block";
 area.scrollIntoView({behavior:"smooth"});
 
 tapTimer=setInterval(function(){
 
 tapTime--;
-
 document.getElementById("tapTime").textContent=tapTime;
 
 if(tapTime<=0){
-
 clearInterval(tapTimer);
 tapRunning=false;
 
 setTimeout(function(){
 alert("Time! Your score was "+tapScore+"!");
 },100);
-
 }
 
 },1000);
-
 }
 
 function hitTarget(){
@@ -488,7 +467,6 @@ function hitTarget(){
 if(!tapRunning)return;
 
 tapScore++;
-
 document.getElementById("tapScore").textContent=tapScore;
 
 const target=document.getElementById("target");
@@ -497,173 +475,193 @@ const x=Math.floor(Math.random()*180)-90;
 const y=Math.floor(Math.random()*50);
 
 target.style.transform="translate("+x+"px,"+y+"px)";
-
 }
 
 /* =========================
    BRAIN BLITZ
+   120 UNIQUE QUESTIONS
 ========================= */
 
 const brainQuestions=[
 
-{
-q:"Which planet is known as the Red Planet?",
-a:["Venus","Mars","Jupiter","Mercury"],
-correct:1
-},
+{q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Mercury"],correct:1},
+{q:"What is 12 × 8?",a:["86","92","96","108"],correct:2},
+{q:"Which ocean is the largest?",a:["Atlantic","Indian","Pacific","Arctic"],correct:2},
+{q:"How many sides does a hexagon have?",a:["5","6","7","8"],correct:1},
+{q:"What is the capital of Japan?",a:["Seoul","Beijing","Tokyo","Kyoto"],correct:2},
+{q:"Which animal is the fastest on land?",a:["Lion","Cheetah","Horse","Greyhound"],correct:1},
+{q:"What is 144 ÷ 12?",a:["10","11","12","14"],correct:2},
+{q:"Which gas do humans need to breathe?",a:["Hydrogen","Nitrogen","Oxygen","Helium"],correct:2},
+{q:"How many minutes are in two hours?",a:["100","110","120","140"],correct:2},
+{q:"Which is the largest planet in our solar system?",a:["Earth","Saturn","Neptune","Jupiter"],correct:3},
 
-{
-q:"What is 12 × 8?",
-a:["86","92","96","108"],
-correct:2
-},
+{q:"What is 15 + 27?",a:["32","42","52","38"],correct:1},
+{q:"Which country is home to the Great Pyramids of Giza?",a:["Mexico","Egypt","Greece","India"],correct:1},
+{q:"How many days are in a leap year?",a:["364","365","366","367"],correct:2},
+{q:"What is the freezing point of water in Celsius?",a:["0°","10°","32°","100°"],correct:0},
+{q:"Which instrument traditionally has 88 keys?",a:["Guitar","Violin","Piano","Trumpet"],correct:2},
+{q:"Which continent is Brazil located in?",a:["North America","Europe","South America","Africa"],correct:2},
+{q:"What is 9 squared?",a:["18","72","81","99"],correct:2},
+{q:"Which mammal can truly fly?",a:["Flying squirrel","Bat","Penguin","Ostrich"],correct:1},
+{q:"What color do blue and yellow make when mixing paint?",a:["Purple","Orange","Green","Red"],correct:2},
+{q:"How many players from one team are on the field in American football?",a:["9","10","11","12"],correct:2},
 
-{
-q:"Which ocean is the largest?",
-a:["Atlantic","Indian","Pacific","Arctic"],
-correct:2
-},
+{q:"Which planet is closest to the Sun?",a:["Earth","Venus","Mercury","Mars"],correct:2},
+{q:"What is 100 ÷ 4?",a:["20","25","30","40"],correct:1},
+{q:"Which organ pumps blood through the human body?",a:["Brain","Lungs","Heart","Kidney"],correct:2},
+{q:"What is the opposite of ancient?",a:["Historic","Modern","Old","Past"],correct:1},
+{q:"What is the capital of France?",a:["Rome","Paris","Madrid","Berlin"],correct:1},
+{q:"How many continents are there?",a:["5","6","7","8"],correct:2},
+{q:"What is 7 × 9?",a:["56","63","72","79"],correct:1},
+{q:"Which animal is known as the king of the jungle?",a:["Tiger","Lion","Bear","Wolf"],correct:1},
+{q:"Which planet is famous for its rings?",a:["Mars","Venus","Saturn","Mercury"],correct:2},
+{q:"What is 50% of 200?",a:["50","75","100","150"],correct:2},
 
-{
-q:"How many sides does a hexagon have?",
-a:["5","6","7","8"],
-correct:1
-},
+{q:"Which language is primarily spoken in Brazil?",a:["Spanish","Portuguese","French","Italian"],correct:1},
+{q:"How many legs does a spider have?",a:["6","8","10","12"],correct:1},
+{q:"What is the boiling point of water at sea level in Celsius?",a:["50°","75°","100°","120°"],correct:2},
+{q:"Which is the smallest prime number?",a:["0","1","2","3"],correct:2},
+{q:"What is the capital of Canada?",a:["Toronto","Ottawa","Vancouver","Montreal"],correct:1},
+{q:"Which metal is represented by the symbol Au?",a:["Silver","Gold","Copper","Iron"],correct:1},
+{q:"What is 11 × 11?",a:["111","121","131","141"],correct:1},
+{q:"Which animal is the largest living animal?",a:["Elephant","Blue whale","Giraffe","Great white shark"],correct:1},
+{q:"How many hours are in one day?",a:["12","18","24","36"],correct:2},
+{q:"Which season follows summer in the Northern Hemisphere?",a:["Spring","Winter","Autumn","Monsoon"],correct:2},
 
-{
-q:"What is the capital of Japan?",
-a:["Seoul","Beijing","Tokyo","Kyoto"],
-correct:2
-},
+{q:"What is the square root of 64?",a:["6","7","8","9"],correct:2},
+{q:"Which country is shaped like a boot?",a:["Spain","Italy","Portugal","Greece"],correct:1},
+{q:"How many colors are traditionally listed in a rainbow?",a:["5","6","7","8"],correct:2},
+{q:"Which blood cells help fight infection?",a:["Red blood cells","White blood cells","Platelets","Plasma"],correct:1},
+{q:"What is 25 + 36?",a:["51","61","71","81"],correct:1},
+{q:"What is the largest continent?",a:["Africa","Europe","Asia","North America"],correct:2},
+{q:"Which bird is commonly associated with Antarctica?",a:["Eagle","Penguin","Parrot","Owl"],correct:1},
+{q:"How many centimeters are in one meter?",a:["10","50","100","1000"],correct:2},
+{q:"What is the capital of Australia?",a:["Sydney","Melbourne","Canberra","Perth"],correct:2},
+{q:"Which part of a plant typically absorbs water from soil?",a:["Flower","Leaf","Roots","Fruit"],correct:2},
 
-{
-q:"Which animal is the fastest on land?",
-a:["Lion","Cheetah","Horse","Greyhound"],
-correct:1
-},
+{q:"What is 13 × 5?",a:["55","60","65","70"],correct:2},
+{q:"Which is the largest organ of the human body?",a:["Heart","Liver","Skin","Lungs"],correct:2},
+{q:"Which planet is sometimes called Earth's sister planet?",a:["Venus","Mars","Jupiter","Saturn"],correct:0},
+{q:"How many months have 31 days?",a:["5","6","7","8"],correct:2},
+{q:"What is 200 - 75?",a:["115","125","135","145"],correct:1},
+{q:"Which ocean lies between Africa and Australia?",a:["Atlantic","Pacific","Indian","Arctic"],correct:2},
+{q:"Which animal is known for changing its color?",a:["Chameleon","Zebra","Panda","Kangaroo"],correct:0},
+{q:"How many degrees are in a right angle?",a:["45","60","90","180"],correct:2},
+{q:"What is the capital of Italy?",a:["Milan","Venice","Rome","Naples"],correct:2},
+{q:"Which natural satellite orbits Earth?",a:["Mars","Moon","Venus","Sun"],correct:1},
 
-{
-q:"What is 144 ÷ 12?",
-a:["10","11","12","14"],
-correct:2
-},
+{q:"What is 6 cubed?",a:["36","108","216","256"],correct:2},
+{q:"Which element has the chemical symbol O?",a:["Gold","Oxygen","Osmium","Iron"],correct:1},
+{q:"What is the largest species of big cat?",a:["Lion","Tiger","Leopard","Cheetah"],correct:1},
+{q:"How many seconds are in one minute?",a:["30","45","60","90"],correct:2},
+{q:"Which country contains the city of Barcelona?",a:["Italy","Spain","Portugal","France"],correct:1},
+{q:"What is 72 ÷ 8?",a:["7","8","9","10"],correct:2},
+{q:"Which body part contains the femur?",a:["Arm","Leg","Chest","Skull"],correct:1},
+{q:"What is the capital of Germany?",a:["Munich","Frankfurt","Berlin","Hamburg"],correct:2},
+{q:"Which planet is farthest from the Sun among the eight planets?",a:["Saturn","Uranus","Neptune","Jupiter"],correct:2},
+{q:"How many quarters make one U.S. dollar?",a:["2","3","4","5"],correct:2},
 
-{
-q:"Which gas do humans need to breathe?",
-a:["Hydrogen","Nitrogen","Oxygen","Helium"],
-correct:2
-},
+{q:"What is 17 + 19?",a:["34","36","38","40"],correct:1},
+{q:"Which animal is famous for black and white stripes?",a:["Panda","Zebra","Skunk","Badger"],correct:1},
+{q:"What is the capital of Mexico?",a:["Cancun","Mexico City","Monterrey","Tijuana"],correct:1},
+{q:"How many sides does an octagon have?",a:["6","7","8","9"],correct:2},
+{q:"Which vitamin is commonly produced by the skin with sunlight exposure?",a:["Vitamin A","Vitamin B12","Vitamin C","Vitamin D"],correct:3},
+{q:"What is 90 - 47?",a:["33","43","53","57"],correct:1},
+{q:"Which is Earth's largest ocean?",a:["Indian","Atlantic","Pacific","Southern"],correct:2},
+{q:"Which animal is known for carrying its young in a pouch?",a:["Kangaroo","Tiger","Elephant","Wolf"],correct:0},
+{q:"What is 10% of 500?",a:["25","50","75","100"],correct:1},
+{q:"Which city is the capital of the United Kingdom?",a:["Manchester","Liverpool","London","Edinburgh"],correct:2},
 
-{
-q:"How many minutes are in two hours?",
-a:["100","110","120","140"],
-correct:2
-},
+{q:"How many teeth does a typical adult human have including wisdom teeth?",a:["28","30","32","36"],correct:2},
+{q:"What is 14 × 6?",a:["74","84","94","104"],correct:1},
+{q:"Which continent contains the Sahara Desert?",a:["Asia","Africa","Australia","South America"],correct:1},
+{q:"Which planet is the largest?",a:["Mars","Earth","Saturn","Jupiter"],correct:3},
+{q:"How many feet are in one yard?",a:["2","3","4","5"],correct:1},
+{q:"Which animal is known for building dams?",a:["Otter","Beaver","Fox","Rabbit"],correct:1},
+{q:"What is 81 ÷ 9?",a:["7","8","9","10"],correct:2},
+{q:"Which country is famous for the Taj Mahal?",a:["India","China","Thailand","Japan"],correct:0},
+{q:"What do bees primarily collect from flowers to make honey?",a:["Sand","Nectar","Dew","Sap"],correct:1},
+{q:"How many planets are in our solar system?",a:["7","8","9","10"],correct:1},
 
-{
-q:"Which is the largest planet in our solar system?",
-a:["Earth","Saturn","Neptune","Jupiter"],
-correct:3
-},
+{q:"What is 19 × 3?",a:["47","57","67","77"],correct:1},
+{q:"Which continent is Egypt primarily located in?",a:["Africa","Asia","Europe","South America"],correct:0},
+{q:"Which organ is primarily responsible for breathing?",a:["Heart","Lungs","Kidneys","Stomach"],correct:1},
+{q:"What is the capital of Spain?",a:["Barcelona","Madrid","Valencia","Seville"],correct:1},
+{q:"Which shape has exactly three sides?",a:["Square","Triangle","Pentagon","Circle"],correct:1},
+{q:"What is 125 + 75?",a:["175","190","200","225"],correct:2},
+{q:"Which animal is the tallest living land animal?",a:["Elephant","Giraffe","Camel","Moose"],correct:1},
+{q:"What is H2O commonly called?",a:["Salt","Water","Oxygen","Hydrogen"],correct:1},
+{q:"Which direction is opposite east?",a:["North","South","West","Northeast"],correct:2},
+{q:"How many weeks are approximately in one year?",a:["48","50","52","54"],correct:2},
 
-{
-q:"What is 15 + 27?",
-a:["32","42","52","38"],
-correct:1
-},
+{q:"What is 16 × 4?",a:["54","64","74","84"],correct:1},
+{q:"Which country is home to the city of Rome?",a:["France","Italy","Spain","Austria"],correct:1},
+{q:"Which animal is known for its long trunk?",a:["Rhino","Elephant","Hippo","Giraffe"],correct:1},
+{q:"What is 300 ÷ 10?",a:["20","30","40","50"],correct:1},
+{q:"Which planet do humans live on?",a:["Mars","Earth","Venus","Jupiter"],correct:1},
+{q:"How many sides does a pentagon have?",a:["4","5","6","7"],correct:1},
+{q:"What is the capital of Greece?",a:["Athens","Sparta","Rome","Sofia"],correct:0},
+{q:"Which part of the body contains the brain?",a:["Chest","Abdomen","Skull","Leg"],correct:2},
+{q:"What is 45 + 55?",a:["90","95","100","110"],correct:2},
+{q:"Which animal is commonly called man's best friend?",a:["Cat","Dog","Horse","Dolphin"],correct:1},
 
-{
-q:"Which country is home to the Great Pyramids of Giza?",
-a:["Mexico","Egypt","Greece","India"],
-correct:1
-},
-
-{
-q:"How many days are in a leap year?",
-a:["364","365","366","367"],
-correct:2
-},
-
-{
-q:"What is the freezing point of water in Celsius?",
-a:["0°","10°","32°","100°"],
-correct:0
-},
-
-{
-q:"Which instrument has 88 keys?",
-a:["Guitar","Violin","Piano","Trumpet"],
-correct:2
-},
-
-{
-q:"Which continent is Brazil located in?",
-a:["North America","Europe","South America","Africa"],
-correct:2
-},
-
-{
-q:"What is 9 squared?",
-a:["18","72","81","99"],
-correct:2
-},
-
-{
-q:"Which mammal can truly fly?",
-a:["Flying squirrel","Bat","Penguin","Ostrich"],
-correct:1
-},
-
-{
-q:"What color do blue and yellow make?",
-a:["Purple","Orange","Green","Red"],
-correct:2
-},
-
-{
-q:"How many players from one team are on the field in American football?",
-a:["9","10","11","12"],
-correct:2
-},
-
-{
-q:"Which planet is closest to the Sun?",
-a:["Earth","Venus","Mercury","Mars"],
-correct:2
-},
-
-{
-q:"What is 100 ÷ 4?",
-a:["20","25","30","40"],
-correct:1
-},
-
-{
-q:"Which organ pumps blood through the human body?",
-a:["Brain","Lungs","Heart","Kidney"],
-correct:2
-},
-
-{
-q:"What is the opposite of 'ancient'?",
-a:["Historic","Modern","Old","Past"],
-correct:1
-}
+{q:"How many hours are in two days?",a:["24","36","48","72"],correct:2},
+{q:"What is 20 × 5?",a:["80","90","100","120"],correct:2},
+{q:"Which country is directly north of the United States?",a:["Mexico","Canada","Cuba","Brazil"],correct:1},
+{q:"Which star is at the center of our solar system?",a:["Polaris","Sirius","Sun","Vega"],correct:2},
+{q:"How many degrees are in a full circle?",a:["90","180","270","360"],correct:3},
+{q:"What is 99 + 1?",a:["90","100","101","109"],correct:1},
+{q:"Which animal is known for having a shell and moving slowly?",a:["Cheetah","Turtle","Falcon","Wolf"],correct:1},
+{q:"Which continent is the United States located in?",a:["Europe","Asia","North America","South America"],correct:2},
+{q:"What is 64 ÷ 4?",a:["12","14","16","18"],correct:2},
+{q:"Which device is used to measure temperature?",a:["Barometer","Thermometer","Compass","Ruler"],correct:1}
 
 ];
+
+/* Brain Blitz state */
 
 let brainScore=0;
 let brainStreak=0;
 let brainTime=60;
 let brainRunning=false;
-let brainTimer;
+let brainTimer=null;
 let currentBrainQuestion=null;
-let lastQuestion=-1;
+
+/* This deck contains question indexes.
+   Once an index is used, it is removed.
+   Therefore NO question can repeat in a round. */
+
+let brainDeck=[];
 
 let brainHighScore=
 Number(localStorage.getItem("keldiqBrainHighScore"))||0;
 
 document.getElementById("brainHighScore").textContent=brainHighScore;
+
+function shuffleArray(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j=Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]]=
+[array[j],array[i]];
+
+}
+
+return array;
+}
+
+function createBrainDeck(){
+
+brainDeck=[];
+
+for(let i=0;i<brainQuestions.length;i++){
+brainDeck.push(i);
+}
+
+shuffleArray(brainDeck);
+}
 
 function openBrainBlitz(){
 
@@ -673,20 +671,19 @@ const area=document.getElementById("brainArea");
 
 area.style.display="block";
 area.scrollIntoView({behavior:"smooth"});
-
 }
 
 function startBrainBlitz(){
 
 closeOtherGames("brain");
-
 clearInterval(brainTimer);
 
 brainScore=0;
 brainStreak=0;
 brainTime=60;
 brainRunning=true;
-lastQuestion=-1;
+
+createBrainDeck();
 
 document.getElementById("brainScore").textContent=0;
 document.getElementById("brainStreak").textContent=0;
@@ -708,26 +705,29 @@ brainTime--;
 document.getElementById("brainTime").textContent=brainTime;
 
 if(brainTime<=0){
-endBrainBlitz();
+endBrainBlitz("Time's up!");
 }
 
 },1000);
-
 }
 
 function nextBrainQuestion(){
 
 if(!brainRunning)return;
 
-let index;
+/* If all 120 were somehow answered,
+   end the round instead of repeating any. */
 
-do{
-index=Math.floor(Math.random()*brainQuestions.length);
+if(brainDeck.length===0){
+endBrainBlitz("Amazing! You answered every question!");
+return;
 }
-while(index===lastQuestion && brainQuestions.length>1);
 
-lastQuestion=index;
-currentBrainQuestion=brainQuestions[index];
+/* Removes one question permanently from this round */
+
+const questionIndex=brainDeck.pop();
+
+currentBrainQuestion=brainQuestions[questionIndex];
 
 document.getElementById("question").textContent=
 currentBrainQuestion.q;
@@ -740,7 +740,6 @@ button.textContent=currentBrainQuestion.a[i];
 button.disabled=false;
 
 }
-
 }
 
 function answerQuestion(index){
@@ -776,10 +775,9 @@ document.getElementById("brainScore").textContent=brainScore;
 document.getElementById("brainStreak").textContent=brainStreak;
 
 nextBrainQuestion();
-
 }
 
-function endBrainBlitz(){
+function endBrainBlitz(message){
 
 if(!brainRunning)return;
 
@@ -798,29 +796,25 @@ brainHighScore
 
 document.getElementById("brainHighScore").textContent=
 brainHighScore;
-
 }
 
 document.getElementById("question").textContent=
-"Time's up! Final score: "+brainScore;
+message+" Final score: "+brainScore;
 
 document.getElementById("brainFeedback").textContent=
-"Best streak challenge complete!";
+"Questions answered: "+(brainQuestions.length-brainDeck.length);
 
 for(let i=0;i<4;i++){
 document.getElementById("answer"+i).disabled=true;
 }
 
-document.getElementById("brainButton").textContent=
-"PLAY AGAIN";
-
+document.getElementById("brainButton").textContent="PLAY AGAIN";
 }
 
 function stopBrainBlitz(){
 
 brainRunning=false;
 clearInterval(brainTimer);
-
 }
 
 /* =========================
@@ -852,13 +846,11 @@ const area=document.getElementById("spaceArea");
 
 area.style.display="block";
 area.scrollIntoView({behavior:"smooth"});
-
 }
 
 function startSpaceGame(){
 
 closeOtherGames("space");
-
 stopSpaceGame();
 
 spaceScore=0;
@@ -869,7 +861,6 @@ document.getElementById("spaceScore").textContent=0;
 document.getElementById("spaceButton").textContent="RESTART";
 
 const area=document.getElementById("spaceArea");
-
 area.style.display="block";
 
 shipX=(spaceGame.clientWidth/2)-25;
@@ -892,7 +883,6 @@ asteroidSpeed+=0.35;
 },500);
 
 gameLoop();
-
 }
 
 function createAsteroid(){
@@ -915,7 +905,6 @@ asteroids.push({
 element:asteroid,
 y:-50
 });
-
 }
 
 function gameLoop(){
@@ -949,11 +938,9 @@ a.element.remove();
 asteroids.splice(i,1);
 
 }
-
 }
 
 animationId=requestAnimationFrame(gameLoop);
-
 }
 
 function gameOver(){
@@ -974,7 +961,6 @@ savedHighScore
 );
 
 document.getElementById("highScore").textContent=savedHighScore;
-
 }
 
 document.getElementById("spaceButton").textContent="PLAY AGAIN";
@@ -982,7 +968,6 @@ document.getElementById("spaceButton").textContent="PLAY AGAIN";
 setTimeout(function(){
 alert("Game Over! Score: "+spaceScore);
 },100);
-
 }
 
 function stopSpaceGame(){
@@ -998,7 +983,6 @@ a.element.remove();
 });
 
 asteroids=[];
-
 }
 
 function moveShip(amount){
@@ -1014,7 +998,6 @@ shipX=spaceGame.clientWidth-50;
 }
 
 ship.style.left=shipX+"px";
-
 }
 
 document.addEventListener("keydown",function(e){
@@ -1048,7 +1031,6 @@ shipX=spaceGame.clientWidth-50;
 }
 
 ship.style.left=shipX+"px";
-
 }
 
 spaceGame.addEventListener("pointerdown",function(e){
