@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Keldiq Games | Free Games Online</title>
+  <meta name="description" content="Play free games online at Keldiq Games. Quick, fun games you can play instantly on desktop or mobile.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, #16265c 0%, #080d20 40%, #03050c 100%);
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 22px 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(3,5,12,.75);
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #3c82ff;
+    }
+
+    nav a {
+      color: #d7e1ff;
+      text-decoration: none;
+      margin-left: 24px;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 65px 20px 35px;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 7vw, 72px);
+      line-height: 1;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span {
+      color: #4d8dff;
+    }
+
+    .hero p {
+      color: #aebbdc;
+      font-size: 18px;
+      max-width: 650px;
+      margin: auto;
+      line-height: 1.6;
+    }
+
+    .section {
+      width: min(1100px, 92%);
+      margin: 30px auto 60px;
+    }
+
+    .section-title {
+      margin-bottom: 18px;
+      font-size: 25px;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .game-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      padding: 24px;
+      transition: .2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: #4d8dff;
+    }
+
+    .game-icon {
+      font-size: 45px;
+      margin-bottom: 14px;
+    }
+
+    .game-card h3 {
+      font-size: 21px;
+      margin-bottom: 9px;
+    }
+
+    .game-card p {
+      color: #aebbdc;
+      line-height: 1.5;
+      min-height: 48px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 18px;
+      background: #377dff;
+      color: white;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background: #5792ff;
+    }
+
+    .coming {
+      opacity: .55;
+    }
+
+    .game-area {
+      margin-top: 40px;
+      display: none;
+      text-align: center;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.1);
+      padding: 35px 20px;
+      border-radius: 20px;
+    }
+
+    .game-area h2 {
+      margin-bottom: 10px;
+    }
+
+    .score {
+      font-size: 22px;
+      margin: 15px;
+      color: #7eabff;
+      font-weight: bold;
+    }
+
+    #target {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #377dff, #8a4dff);
+      margin: 35px auto;
+      cursor: pointer;
+      box-shadow: 0 0 35px rgba(55,125,255,.55);
+      transition: transform .1s;
+    }
+
+    #target:active {
+      transform: scale(.88);
+    }
+
+    .timer {
+      font-size: 18px;
+      color: #c9d4ef;
+    }
+
+    footer {
+      text-align: center;
+      color: #7784a5;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 30px 20px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 45px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">KELDIQ <span>GAMES</span></div>
+
+  <nav>
+    <a href="#games">Games</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>PLAY. COMPETE.<br><span>BEAT YOUR SCORE.</span></h1>
+
+  <p>
+    Instant free games with no downloads.
+    Play on your phone or computer and see how high you can score.
+  </p>
+</section>
+
+<main class="section" id="games">
+
+  <h2 class="section-title">🔥 Play Now</h2>
+
+  <div class="games">
+
+    <div class="game-card">
+      <div class="game-icon">🎯</div>
+      <h3>Tap Rush</h3>
+      <p>
+        How fast are you? Hit the target as many times as possible
+        before the clock runs out.
+      </p>
+
+      <button onclick="startGame()">PLAY NOW</button>
+    </div>
+
+    <div class="game-card coming">
+      <div class="game-icon">🧠</div>
+      <h3>Brain Blitz</h3>
+      <p>Fast questions. Fast answers. Beat the clock.</p>
+      <button disabled>COMING SOON</button>
+    </div>
+
+    <div class="game-card coming">
+      <div class="game-icon">🚀</div>
+      <h3>Space Dodge</h3>
+      <p>Dodge obstacles and survive as long as you can.</p>
+      <button disabled>COMING SOON</button>
+    </div>
+
+    <div class="game-card coming">
+      <div class="game-icon">💎</div>
+      <h3>Gem Drop</h3>
+      <p>Match gems, build combos and chase a massive score.</p>
+      <button disabled>COMING SOON</button>
+    </div>
+
+  </div>
+
+  <div class="game-area" id="gameArea">
+
+    <h2>🎯 Tap Rush</h2>
+
+    <p>Click or tap the target as fast as you can!</p>
+
+    <div class="score">
+      Score: <span id="score">0</span>
+    </div>
+
+    <div class="timer">
+      Time: <span id="time">10</span> seconds
+    </div>
+
+    <div id="target" onclick="hitTarget()"></div>
+
+    <button onclick="startGame()">RESTART</button>
+
+  </div>
+
+</main>
+
+<section class="section" id="about">
+
+  <h2 class="section-title">About Keldiq Games</h2>
+
+  <div class="game-card">
+
+    <p>
+      Keldiq Games is being built as a growing collection of quick,
+      fun games you can play instantly from any device.
+      New games and challenges are coming soon.
+    </p>
+
+  </div>
+
+</section>
+
+<footer>
+  © 2026 Keldiq Games. All rights reserved.
+</footer>
+
+<script>
+
+  let score = 0;
+  let time = 10;
+  let running = false;
+  let timer;
+
+  function startGame() {
+
+    clearInterval(timer);
+
+    score = 0;
+    time = 10;
+    running = true;
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("time").textContent = time;
+
+    const area = document.getElementById("gameArea");
+
+    area.style.display = "block";
+
+    area.scrollIntoView({
+      behavior: "smooth"
+    });
+
+    timer = setInterval(function() {
+
+      time--;
+
+      document.getElementById("time").textContent = time;
+
+      if (time <= 0) {
+
+        clearInterval(timer);
+
+        running = false;
+
+        setTimeout(function() {
+          alert("Time! Your score was " + score + "!");
+        }, 100);
+
+      }
+
+    }, 1000);
+
+  }
+
+  function hitTarget() {
+
+    if (!running) return;
+
+    score++;
+
+    document.getElementById("score").textContent = score;
+
+    const target = document.getElementById("target");
+
+    const x = Math.floor(Math.random() * 180) - 90;
+    const y = Math.floor(Math.random() * 50);
+
+    target.style.transform =
+      "translate(" + x + "px," + y + "px)";
+
+  }
+
+</script>
+
+</body>
+</html>
