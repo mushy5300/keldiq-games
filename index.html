@@ -102,8 +102,7 @@ font-size:15px;
 }
 
 button:hover{background:#5792ff}
-button:disabled{cursor:default}
-.coming{opacity:.55}
+button:disabled{cursor:default;opacity:.55}
 
 .game-area{
 margin-top:40px;
@@ -134,7 +133,7 @@ cursor:pointer;
 box-shadow:0 0 35px rgba(55,125,255,.55);
 }
 
-.brain-stats{
+.brain-stats,.space-stats,.gem-stats{
 display:flex;
 justify-content:center;
 gap:25px;
@@ -176,7 +175,7 @@ border:1px solid rgba(255,255,255,.12);
 .answer-btn:hover{background:#294a91}
 
 #brainFeedback{
-height:28px;
+min-height:28px;
 margin-top:18px;
 font-weight:bold;
 font-size:18px;
@@ -219,19 +218,71 @@ line-height:45px;
 user-select:none;
 }
 
-.space-stats{
-display:flex;
-justify-content:center;
-gap:30px;
-flex-wrap:wrap;
-font-weight:bold;
-color:#cbd7f5;
-}
-
 .instructions{
 color:#9eacd0;
 margin-top:12px;
 font-size:14px;
+}
+
+/* GEM DROP */
+
+#gemBoard{
+width:min(92vw,520px);
+aspect-ratio:1/1;
+margin:25px auto 12px;
+display:grid;
+grid-template-columns:repeat(8,1fr);
+gap:5px;
+padding:8px;
+border-radius:18px;
+background:rgba(2,5,16,.75);
+border:2px solid rgba(77,141,255,.45);
+box-shadow:0 0 35px rgba(55,125,255,.14);
+user-select:none;
+touch-action:manipulation;
+}
+
+.gem{
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:12px;
+font-size:clamp(24px,6vw,42px);
+cursor:pointer;
+background:rgba(255,255,255,.065);
+border:1px solid rgba(255,255,255,.08);
+transition:transform .12s,background .12s,opacity .12s;
+}
+
+.gem:hover{
+transform:scale(1.08);
+background:rgba(255,255,255,.12);
+}
+
+.gem.selected{
+transform:scale(.88);
+background:rgba(77,141,255,.25);
+}
+
+.gem.empty{
+opacity:0;
+pointer-events:none;
+}
+
+#gemMessage{
+min-height:32px;
+font-size:18px;
+font-weight:bold;
+color:#8fb7ff;
+margin-top:10px;
+}
+
+.combo-pop{
+animation:comboPulse .35s ease;
+}
+
+@keyframes comboPulse{
+50%{transform:scale(1.18)}
 }
 
 footer{
@@ -247,6 +298,8 @@ nav{display:none}
 .hero{padding-top:45px}
 #spaceGame{height:430px}
 .answers{grid-template-columns:1fr}
+#gemBoard{gap:3px;padding:5px}
+.gem{border-radius:8px}
 }
 </style>
 </head>
@@ -296,11 +349,11 @@ Play on your phone or computer and see how high you can score.
 <button onclick="openSpaceDodge()">PLAY NOW</button>
 </div>
 
-<div class="game-card coming">
+<div class="game-card">
 <div class="game-icon">💎</div>
 <h3>Gem Drop</h3>
-<p>Match gems, build combos and chase a massive score.</p>
-<button disabled>COMING SOON</button>
+<p>Clear matching gems, build combos and chase an endless high score.</p>
+<button onclick="openGemDrop()">PLAY NOW</button>
 </div>
 
 </div>
@@ -334,7 +387,6 @@ Play on your phone or computer and see how high you can score.
 </div>
 
 <div id="questionBox">
-
 <div id="question">Press START to begin.</div>
 
 <div class="answers">
@@ -345,11 +397,9 @@ Play on your phone or computer and see how high you can score.
 </div>
 
 <div id="brainFeedback"></div>
-
 </div>
 
 <button id="brainButton" onclick="startBrainBlitz()">START GAME</button>
-
 </div>
 
 <!-- SPACE DODGE -->
@@ -373,7 +423,28 @@ Desktop: use ← → or A/D. Mobile: drag your finger left and right.
 </p>
 
 <button id="spaceButton" onclick="startSpaceGame()">START GAME</button>
+</div>
 
+<!-- GEM DROP -->
+
+<div class="game-area" id="gemArea">
+
+<h2>💎 Gem Drop</h2>
+<p>Tap a group of 2 or more matching gems. Bigger groups earn huge points!</p>
+
+<div class="gem-stats">
+<span>Score: <span id="gemScore">0</span></span>
+<span>Combo: <span id="gemCombo">1x</span></span>
+<span>Best: <span id="gemHighScore">0</span></span>
+</div>
+
+<div id="gemBoard"></div>
+
+<div id="gemMessage">
+Clear groups of matching gems to keep playing.
+</div>
+
+<button id="gemButton" onclick="startGemDrop()">NEW GAME</button>
 </div>
 
 </main>
@@ -418,6 +489,9 @@ document.getElementById("spaceArea").style.display="none";
 stopSpaceGame();
 }
 
+if(game!=="gem"){
+document.getElementById("gemArea").style.display="none";
+}
 }
 
 /* =========================
@@ -479,7 +553,6 @@ target.style.transform="translate("+x+"px,"+y+"px)";
 
 /* =========================
    BRAIN BLITZ
-   120 UNIQUE QUESTIONS
 ========================= */
 
 const brainQuestions=[
@@ -618,19 +691,12 @@ const brainQuestions=[
 
 ];
 
-/* Brain Blitz state */
-
 let brainScore=0;
 let brainStreak=0;
 let brainTime=60;
 let brainRunning=false;
 let brainTimer=null;
 let currentBrainQuestion=null;
-
-/* This deck contains question indexes.
-   Once an index is used, it is removed.
-   Therefore NO question can repeat in a round. */
-
 let brainDeck=[];
 
 let brainHighScore=
@@ -644,8 +710,7 @@ for(let i=array.length-1;i>0;i--){
 
 const j=Math.floor(Math.random()*(i+1));
 
-[array[i],array[j]]=
-[array[j],array[i]];
+[array[i],array[j]]=[array[j],array[i]];
 
 }
 
@@ -692,7 +757,6 @@ document.getElementById("brainFeedback").textContent="";
 document.getElementById("brainButton").textContent="RESTART";
 
 const area=document.getElementById("brainArea");
-
 area.style.display="block";
 area.scrollIntoView({behavior:"smooth"});
 
@@ -701,7 +765,6 @@ nextBrainQuestion();
 brainTimer=setInterval(function(){
 
 brainTime--;
-
 document.getElementById("brainTime").textContent=brainTime;
 
 if(brainTime<=0){
@@ -715,15 +778,10 @@ function nextBrainQuestion(){
 
 if(!brainRunning)return;
 
-/* If all 120 were somehow answered,
-   end the round instead of repeating any. */
-
 if(brainDeck.length===0){
 endBrainBlitz("Amazing! You answered every question!");
 return;
 }
-
-/* Removes one question permanently from this round */
 
 const questionIndex=brainDeck.pop();
 
@@ -738,7 +796,6 @@ const button=document.getElementById("answer"+i);
 
 button.textContent=currentBrainQuestion.a[i];
 button.disabled=false;
-
 }
 }
 
@@ -782,7 +839,6 @@ function endBrainBlitz(message){
 if(!brainRunning)return;
 
 brainRunning=false;
-
 clearInterval(brainTimer);
 
 if(brainScore>brainHighScore){
@@ -812,7 +868,6 @@ document.getElementById("brainButton").textContent="PLAY AGAIN";
 }
 
 function stopBrainBlitz(){
-
 brainRunning=false;
 clearInterval(brainTimer);
 }
@@ -1044,6 +1099,363 @@ setShipFromPointer(e.clientX);
 }
 
 });
+
+/* =========================
+   GEM DROP
+========================= */
+
+const GEM_ROWS=8;
+const GEM_COLS=8;
+
+const GEM_TYPES=[
+"💎",
+"🔷",
+"🔶",
+"💚",
+"💜",
+"❤️"
+];
+
+let gemBoard=[];
+let gemScore=0;
+let gemCombo=1;
+let gemRunning=false;
+let gemMoves=0;
+
+let gemHighScore=
+Number(localStorage.getItem("keldiqGemHighScore"))||0;
+
+document.getElementById("gemHighScore").textContent=gemHighScore;
+
+function openGemDrop(){
+
+closeOtherGames("gem");
+
+const area=document.getElementById("gemArea");
+area.style.display="block";
+area.scrollIntoView({behavior:"smooth"});
+
+if(!gemRunning){
+startGemDrop();
+}
+}
+
+function randomGem(){
+return Math.floor(Math.random()*GEM_TYPES.length);
+}
+
+function createGemBoard(){
+
+gemBoard=[];
+
+for(let row=0;row<GEM_ROWS;row++){
+
+const newRow=[];
+
+for(let col=0;col<GEM_COLS;col++){
+newRow.push(randomGem());
+}
+
+gemBoard.push(newRow);
+}
+
+/* Make sure the starting board has at least one move */
+
+if(!hasGemMoves()){
+createGemBoard();
+}
+}
+
+function startGemDrop(){
+
+closeOtherGames("gem");
+
+gemScore=0;
+gemCombo=1;
+gemMoves=0;
+gemRunning=true;
+
+document.getElementById("gemScore").textContent="0";
+document.getElementById("gemCombo").textContent="1x";
+document.getElementById("gemMessage").textContent=
+"Tap a group of 2 or more matching gems.";
+document.getElementById("gemButton").textContent="RESTART";
+
+const area=document.getElementById("gemArea");
+area.style.display="block";
+
+createGemBoard();
+renderGemBoard();
+}
+
+function renderGemBoard(){
+
+const board=document.getElementById("gemBoard");
+board.innerHTML="";
+
+for(let row=0;row<GEM_ROWS;row++){
+
+for(let col=0;col<GEM_COLS;col++){
+
+const cell=document.createElement("div");
+
+cell.className="gem";
+
+const value=gemBoard[row][col];
+
+if(value===null){
+
+cell.classList.add("empty");
+cell.textContent="";
+
+}else{
+
+cell.textContent=GEM_TYPES[value];
+
+cell.addEventListener("click",function(){
+selectGemGroup(row,col);
+});
+
+}
+
+board.appendChild(cell);
+}
+}
+}
+
+function getGemGroup(startRow,startCol){
+
+const type=gemBoard[startRow][startCol];
+
+if(type===null)return[];
+
+const visited=
+Array.from({length:GEM_ROWS},()=>Array(GEM_COLS).fill(false));
+
+const group=[];
+const stack=[[startRow,startCol]];
+
+while(stack.length){
+
+const current=stack.pop();
+const row=current[0];
+const col=current[1];
+
+if(
+row<0 ||
+row>=GEM_ROWS ||
+col<0 ||
+col>=GEM_COLS ||
+visited[row][col]
+){
+continue;
+}
+
+visited[row][col]=true;
+
+if(gemBoard[row][col]!==type){
+continue;
+}
+
+group.push([row,col]);
+
+stack.push([row-1,col]);
+stack.push([row+1,col]);
+stack.push([row,col-1]);
+stack.push([row,col+1]);
+}
+
+return group;
+}
+
+function selectGemGroup(row,col){
+
+if(!gemRunning)return;
+
+const group=getGemGroup(row,col);
+
+if(group.length<2){
+
+gemCombo=1;
+
+document.getElementById("gemCombo").textContent="1x";
+document.getElementById("gemMessage").textContent=
+"Match at least 2 connected gems.";
+
+return;
+}
+
+/* Bigger groups score exponentially better */
+
+const basePoints=
+group.length*group.length*10;
+
+const earned=
+basePoints*gemCombo;
+
+gemScore+=earned;
+gemMoves++;
+
+group.forEach(function(position){
+
+const r=position[0];
+const c=position[1];
+
+gemBoard[r][c]=null;
+});
+
+document.getElementById("gemScore").textContent=gemScore;
+
+document.getElementById("gemMessage").textContent=
+group.length+" gems cleared! +"+earned+" points";
+
+if(group.length>=4){
+
+gemCombo++;
+
+document.getElementById("gemCombo").textContent=
+gemCombo+"x";
+
+const comboDisplay=document.getElementById("gemCombo");
+
+comboDisplay.classList.remove("combo-pop");
+void comboDisplay.offsetWidth;
+comboDisplay.classList.add("combo-pop");
+
+}else{
+
+gemCombo=1;
+
+document.getElementById("gemCombo").textContent="1x";
+}
+
+applyGemGravity();
+
+setTimeout(function(){
+
+renderGemBoard();
+
+if(!hasGemMoves()){
+endGemDrop();
+}
+
+},120);
+}
+
+function applyGemGravity(){
+
+/* Drop gems downward */
+
+for(let col=0;col<GEM_COLS;col++){
+
+const remaining=[];
+
+for(let row=GEM_ROWS-1;row>=0;row--){
+
+if(gemBoard[row][col]!==null){
+remaining.push(gemBoard[row][col]);
+}
+
+}
+
+for(let row=GEM_ROWS-1;row>=0;row--){
+
+const index=GEM_ROWS-1-row;
+
+gemBoard[row][col]=
+index<remaining.length ? remaining[index] : null;
+}
+}
+
+/* Shift empty columns toward the left */
+
+let writeCol=0;
+
+for(let col=0;col<GEM_COLS;col++){
+
+let hasGem=false;
+
+for(let row=0;row<GEM_ROWS;row++){
+
+if(gemBoard[row][col]!==null){
+hasGem=true;
+break;
+}
+}
+
+if(hasGem){
+
+if(writeCol!==col){
+
+for(let row=0;row<GEM_ROWS;row++){
+
+gemBoard[row][writeCol]=gemBoard[row][col];
+gemBoard[row][col]=null;
+
+}
+}
+
+writeCol++;
+}
+}
+}
+
+function hasGemMoves(){
+
+for(let row=0;row<GEM_ROWS;row++){
+
+for(let col=0;col<GEM_COLS;col++){
+
+const current=gemBoard[row][col];
+
+if(current===null)continue;
+
+if(
+col+1<GEM_COLS &&
+gemBoard[row][col+1]===current
+){
+return true;
+}
+
+if(
+row+1<GEM_ROWS &&
+gemBoard[row+1][col]===current
+){
+return true;
+}
+
+}
+}
+
+return false;
+}
+
+function endGemDrop(){
+
+gemRunning=false;
+
+if(gemScore>gemHighScore){
+
+gemHighScore=gemScore;
+
+localStorage.setItem(
+"keldiqGemHighScore",
+gemHighScore
+);
+
+document.getElementById("gemHighScore").textContent=
+gemHighScore;
+}
+
+document.getElementById("gemMessage").textContent=
+"🏆 GAME OVER — Final score: "+
+gemScore+
+" | Moves: "+
+gemMoves;
+
+document.getElementById("gemButton").textContent=
+"PLAY AGAIN";
+}
 
 </script>
 
