@@ -26,12 +26,7 @@ border-bottom:1px solid rgba(255,255,255,.08);
 background:rgba(3,5,12,.8);
 }
 
-.logo{
-font-size:27px;
-font-weight:900;
-letter-spacing:1px;
-}
-
+.logo{font-size:27px;font-weight:900;letter-spacing:1px}
 .logo span{color:#3c82ff}
 
 nav a{
@@ -41,10 +36,7 @@ margin-left:24px;
 font-weight:bold;
 }
 
-.hero{
-text-align:center;
-padding:65px 20px 35px;
-}
+.hero{text-align:center;padding:65px 20px 35px}
 
 .hero h1{
 font-size:clamp(38px,7vw,72px);
@@ -67,10 +59,7 @@ width:min(1100px,92%);
 margin:30px auto 60px;
 }
 
-.section-title{
-margin-bottom:18px;
-font-size:25px;
-}
+.section-title{margin-bottom:18px;font-size:25px}
 
 .games{
 display:grid;
@@ -91,15 +80,8 @@ transform:translateY(-4px);
 border-color:#4d8dff;
 }
 
-.game-icon{
-font-size:45px;
-margin-bottom:14px;
-}
-
-.game-card h3{
-font-size:21px;
-margin-bottom:9px;
-}
+.game-icon{font-size:45px;margin-bottom:14px}
+.game-card h3{font-size:21px;margin-bottom:9px}
 
 .game-card p{
 color:#aebbdc;
@@ -120,9 +102,7 @@ font-size:15px;
 }
 
 button:hover{background:#5792ff}
-
 button:disabled{cursor:default}
-
 .coming{opacity:.55}
 
 .game-area{
@@ -142,10 +122,7 @@ color:#7eabff;
 font-weight:bold;
 }
 
-.timer{
-font-size:18px;
-color:#c9d4ef;
-}
+.timer{font-size:18px;color:#c9d4ef}
 
 #target{
 width:85px;
@@ -155,6 +132,54 @@ background:linear-gradient(135deg,#377dff,#8a4dff);
 margin:35px auto;
 cursor:pointer;
 box-shadow:0 0 35px rgba(55,125,255,.55);
+}
+
+.brain-stats{
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+margin:20px 0;
+font-weight:bold;
+color:#cbd7f5;
+}
+
+#questionBox{
+max-width:650px;
+margin:25px auto;
+padding:25px;
+border-radius:16px;
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.1);
+}
+
+#question{
+font-size:24px;
+line-height:1.4;
+margin-bottom:22px;
+}
+
+.answers{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.answer-btn{
+margin:0;
+min-height:60px;
+font-size:16px;
+background:#17254c;
+border:1px solid rgba(255,255,255,.12);
+}
+
+.answer-btn:hover{background:#294a91}
+
+#brainFeedback{
+height:28px;
+margin-top:18px;
+font-weight:bold;
+font-size:18px;
 }
 
 #spaceGame{
@@ -221,6 +246,7 @@ margin-top:50px;
 nav{display:none}
 .hero{padding-top:45px}
 #spaceGame{height:430px}
+.answers{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -258,11 +284,11 @@ Play on your phone or computer and see how high you can score.
 <button onclick="startTapRush()">PLAY NOW</button>
 </div>
 
-<div class="game-card coming">
+<div class="game-card">
 <div class="game-icon">🧠</div>
 <h3>Brain Blitz</h3>
-<p>Fast questions. Fast answers. Beat the clock.</p>
-<button disabled>COMING SOON</button>
+<p>Answer fast, build a streak and score as many points as you can.</p>
+<button onclick="openBrainBlitz()">PLAY NOW</button>
 </div>
 
 <div class="game-card">
@@ -280,6 +306,8 @@ Play on your phone or computer and see how high you can score.
 </div>
 
 </div>
+
+<!-- TAP RUSH -->
 
 <div class="game-area" id="tapArea">
 
@@ -299,6 +327,45 @@ Time: <span id="tapTime">10</span> seconds
 <button onclick="startTapRush()">RESTART</button>
 
 </div>
+
+<!-- BRAIN BLITZ -->
+
+<div class="game-area" id="brainArea">
+
+<h2>🧠 Brain Blitz</h2>
+<p>You have 60 seconds. Correct answers build your streak and earn bonus points.</p>
+
+<div class="brain-stats">
+<span>Score: <span id="brainScore">0</span></span>
+<span>Streak: <span id="brainStreak">0</span></span>
+<span>Time: <span id="brainTime">60</span>s</span>
+<span>High Score: <span id="brainHighScore">0</span></span>
+</div>
+
+<div id="questionBox">
+
+<div id="question">
+Press START to begin.
+</div>
+
+<div class="answers">
+
+<button class="answer-btn" id="answer0" onclick="answerQuestion(0)">—</button>
+<button class="answer-btn" id="answer1" onclick="answerQuestion(1)">—</button>
+<button class="answer-btn" id="answer2" onclick="answerQuestion(2)">—</button>
+<button class="answer-btn" id="answer3" onclick="answerQuestion(3)">—</button>
+
+</div>
+
+<div id="brainFeedback"></div>
+
+</div>
+
+<button id="brainButton" onclick="startBrainBlitz()">START GAME</button>
+
+</div>
+
+<!-- SPACE DODGE -->
 
 <div class="game-area" id="spaceArea">
 
@@ -344,24 +411,42 @@ being added regularly.
 
 <script>
 
-/* TAP RUSH */
+/* =========================
+   SHARED
+========================= */
+
+function closeOtherGames(game){
+
+if(game!=="tap"){
+document.getElementById("tapArea").style.display="none";
+clearInterval(tapTimer);
+tapRunning=false;
+}
+
+if(game!=="brain"){
+document.getElementById("brainArea").style.display="none";
+stopBrainBlitz();
+}
+
+if(game!=="space"){
+document.getElementById("spaceArea").style.display="none";
+stopSpaceGame();
+}
+
+}
+
+/* =========================
+   TAP RUSH
+========================= */
 
 let tapScore=0;
 let tapTime=10;
 let tapRunning=false;
 let tapTimer;
 
-function hideGames(){
-document.getElementById("tapArea").style.display="none";
-document.getElementById("spaceArea").style.display="none";
-stopSpaceGame();
-}
-
 function startTapRush(){
 
-stopSpaceGame();
-
-document.getElementById("spaceArea").style.display="none";
+closeOtherGames("tap");
 
 clearInterval(tapTimer);
 
@@ -415,8 +500,332 @@ target.style.transform="translate("+x+"px,"+y+"px)";
 
 }
 
+/* =========================
+   BRAIN BLITZ
+========================= */
 
-/* SPACE DODGE */
+const brainQuestions=[
+
+{
+q:"Which planet is known as the Red Planet?",
+a:["Venus","Mars","Jupiter","Mercury"],
+correct:1
+},
+
+{
+q:"What is 12 × 8?",
+a:["86","92","96","108"],
+correct:2
+},
+
+{
+q:"Which ocean is the largest?",
+a:["Atlantic","Indian","Pacific","Arctic"],
+correct:2
+},
+
+{
+q:"How many sides does a hexagon have?",
+a:["5","6","7","8"],
+correct:1
+},
+
+{
+q:"What is the capital of Japan?",
+a:["Seoul","Beijing","Tokyo","Kyoto"],
+correct:2
+},
+
+{
+q:"Which animal is the fastest on land?",
+a:["Lion","Cheetah","Horse","Greyhound"],
+correct:1
+},
+
+{
+q:"What is 144 ÷ 12?",
+a:["10","11","12","14"],
+correct:2
+},
+
+{
+q:"Which gas do humans need to breathe?",
+a:["Hydrogen","Nitrogen","Oxygen","Helium"],
+correct:2
+},
+
+{
+q:"How many minutes are in two hours?",
+a:["100","110","120","140"],
+correct:2
+},
+
+{
+q:"Which is the largest planet in our solar system?",
+a:["Earth","Saturn","Neptune","Jupiter"],
+correct:3
+},
+
+{
+q:"What is 15 + 27?",
+a:["32","42","52","38"],
+correct:1
+},
+
+{
+q:"Which country is home to the Great Pyramids of Giza?",
+a:["Mexico","Egypt","Greece","India"],
+correct:1
+},
+
+{
+q:"How many days are in a leap year?",
+a:["364","365","366","367"],
+correct:2
+},
+
+{
+q:"What is the freezing point of water in Celsius?",
+a:["0°","10°","32°","100°"],
+correct:0
+},
+
+{
+q:"Which instrument has 88 keys?",
+a:["Guitar","Violin","Piano","Trumpet"],
+correct:2
+},
+
+{
+q:"Which continent is Brazil located in?",
+a:["North America","Europe","South America","Africa"],
+correct:2
+},
+
+{
+q:"What is 9 squared?",
+a:["18","72","81","99"],
+correct:2
+},
+
+{
+q:"Which mammal can truly fly?",
+a:["Flying squirrel","Bat","Penguin","Ostrich"],
+correct:1
+},
+
+{
+q:"What color do blue and yellow make?",
+a:["Purple","Orange","Green","Red"],
+correct:2
+},
+
+{
+q:"How many players from one team are on the field in American football?",
+a:["9","10","11","12"],
+correct:2
+},
+
+{
+q:"Which planet is closest to the Sun?",
+a:["Earth","Venus","Mercury","Mars"],
+correct:2
+},
+
+{
+q:"What is 100 ÷ 4?",
+a:["20","25","30","40"],
+correct:1
+},
+
+{
+q:"Which organ pumps blood through the human body?",
+a:["Brain","Lungs","Heart","Kidney"],
+correct:2
+},
+
+{
+q:"What is the opposite of 'ancient'?",
+a:["Historic","Modern","Old","Past"],
+correct:1
+}
+
+];
+
+let brainScore=0;
+let brainStreak=0;
+let brainTime=60;
+let brainRunning=false;
+let brainTimer;
+let currentBrainQuestion=null;
+let lastQuestion=-1;
+
+let brainHighScore=
+Number(localStorage.getItem("keldiqBrainHighScore"))||0;
+
+document.getElementById("brainHighScore").textContent=brainHighScore;
+
+function openBrainBlitz(){
+
+closeOtherGames("brain");
+
+const area=document.getElementById("brainArea");
+
+area.style.display="block";
+area.scrollIntoView({behavior:"smooth"});
+
+}
+
+function startBrainBlitz(){
+
+closeOtherGames("brain");
+
+clearInterval(brainTimer);
+
+brainScore=0;
+brainStreak=0;
+brainTime=60;
+brainRunning=true;
+lastQuestion=-1;
+
+document.getElementById("brainScore").textContent=0;
+document.getElementById("brainStreak").textContent=0;
+document.getElementById("brainTime").textContent=60;
+document.getElementById("brainFeedback").textContent="";
+document.getElementById("brainButton").textContent="RESTART";
+
+const area=document.getElementById("brainArea");
+
+area.style.display="block";
+area.scrollIntoView({behavior:"smooth"});
+
+nextBrainQuestion();
+
+brainTimer=setInterval(function(){
+
+brainTime--;
+
+document.getElementById("brainTime").textContent=brainTime;
+
+if(brainTime<=0){
+endBrainBlitz();
+}
+
+},1000);
+
+}
+
+function nextBrainQuestion(){
+
+if(!brainRunning)return;
+
+let index;
+
+do{
+index=Math.floor(Math.random()*brainQuestions.length);
+}
+while(index===lastQuestion && brainQuestions.length>1);
+
+lastQuestion=index;
+currentBrainQuestion=brainQuestions[index];
+
+document.getElementById("question").textContent=
+currentBrainQuestion.q;
+
+for(let i=0;i<4;i++){
+
+const button=document.getElementById("answer"+i);
+
+button.textContent=currentBrainQuestion.a[i];
+button.disabled=false;
+
+}
+
+}
+
+function answerQuestion(index){
+
+if(!brainRunning || !currentBrainQuestion)return;
+
+if(index===currentBrainQuestion.correct){
+
+brainStreak++;
+
+let points=10;
+
+if(brainStreak>=3)points+=5;
+if(brainStreak>=5)points+=5;
+if(brainStreak>=10)points+=10;
+
+brainScore+=points;
+
+document.getElementById("brainFeedback").textContent=
+"✓ Correct! +"+points;
+
+}else{
+
+brainStreak=0;
+
+document.getElementById("brainFeedback").textContent=
+"✗ Wrong! Correct answer: "+
+currentBrainQuestion.a[currentBrainQuestion.correct];
+
+}
+
+document.getElementById("brainScore").textContent=brainScore;
+document.getElementById("brainStreak").textContent=brainStreak;
+
+nextBrainQuestion();
+
+}
+
+function endBrainBlitz(){
+
+if(!brainRunning)return;
+
+brainRunning=false;
+
+clearInterval(brainTimer);
+
+if(brainScore>brainHighScore){
+
+brainHighScore=brainScore;
+
+localStorage.setItem(
+"keldiqBrainHighScore",
+brainHighScore
+);
+
+document.getElementById("brainHighScore").textContent=
+brainHighScore;
+
+}
+
+document.getElementById("question").textContent=
+"Time's up! Final score: "+brainScore;
+
+document.getElementById("brainFeedback").textContent=
+"Best streak challenge complete!";
+
+for(let i=0;i<4;i++){
+document.getElementById("answer"+i).disabled=true;
+}
+
+document.getElementById("brainButton").textContent=
+"PLAY AGAIN";
+
+}
+
+function stopBrainBlitz(){
+
+brainRunning=false;
+clearInterval(brainTimer);
+
+}
+
+/* =========================
+   SPACE DODGE
+========================= */
 
 const spaceGame=document.getElementById("spaceGame");
 const ship=document.getElementById("ship");
@@ -428,19 +837,16 @@ let animationId;
 let asteroidTimer;
 let scoreTimer;
 let asteroidSpeed=3;
-let spawnRate=850;
 let asteroids=[];
 
-let savedHighScore=Number(localStorage.getItem("keldiqSpaceHighScore"))||0;
+let savedHighScore=
+Number(localStorage.getItem("keldiqSpaceHighScore"))||0;
 
 document.getElementById("highScore").textContent=savedHighScore;
 
 function openSpaceDodge(){
 
-clearInterval(tapTimer);
-tapRunning=false;
-
-document.getElementById("tapArea").style.display="none";
+closeOtherGames("space");
 
 const area=document.getElementById("spaceArea");
 
@@ -451,20 +857,25 @@ area.scrollIntoView({behavior:"smooth"});
 
 function startSpaceGame(){
 
+closeOtherGames("space");
+
 stopSpaceGame();
 
 spaceScore=0;
 asteroidSpeed=3;
-spawnRate=850;
 spaceRunning=true;
 
 document.getElementById("spaceScore").textContent=0;
 document.getElementById("spaceButton").textContent="RESTART";
 
+const area=document.getElementById("spaceArea");
+
+area.style.display="block";
+
 shipX=(spaceGame.clientWidth/2)-25;
 ship.style.left=shipX+"px";
 
-asteroidTimer=setInterval(createAsteroid,spawnRate);
+asteroidTimer=setInterval(createAsteroid,850);
 
 scoreTimer=setInterval(function(){
 
@@ -641,9 +1052,7 @@ ship.style.left=shipX+"px";
 }
 
 spaceGame.addEventListener("pointerdown",function(e){
-
 setShipFromPointer(e.clientX);
-
 });
 
 spaceGame.addEventListener("pointermove",function(e){
