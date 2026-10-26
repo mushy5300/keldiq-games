@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Snake | Keldiq Games</title>
+<meta name="description" content="Play Snake free online at Keldiq Games.">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#071426,#0b2447,#123a6d);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.game{
+  width:100%;
+  max-width:500px;
+  text-align:center;
+}
+
+.brand{
+  color:#39a0ff;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+h1{
+  font-size:52px;
+  margin:0 0 10px;
+}
+
+.stats{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin:15px 0;
+}
+
+.stat{
+  background:#102d50;
+  padding:10px 18px;
+  border-radius:10px;
+  min-width:110px;
+}
+
+.stat span{
+  display:block;
+  font-size:22px;
+  font-weight:bold;
+}
+
+button{
+  border:0;
+  background:#1687ff;
+  color:white;
+  font-weight:bold;
+  padding:11px 20px;
+  border-radius:9px;
+  cursor:pointer;
+  font-size:15px;
+  margin:5px;
+}
+
+canvas{
+  width:100%;
+  max-width:440px;
+  aspect-ratio:1;
+  background:#071728;
+  border:4px solid #1c568d;
+  border-radius:14px;
+  margin-top:12px;
+  touch-action:none;
+}
+
+.message{
+  min-height:28px;
+  margin-top:10px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:repeat(3,65px);
+  justify-content:center;
+  gap:7px;
+  margin-top:14px;
+}
+
+.controls button{
+  margin:0;
+  height:55px;
+  font-size:25px;
+}
+
+.up{grid-column:2}
+.left{grid-column:1}
+.down{grid-column:2}
+.right{grid-column:3}
+
+.help{
+  font-size:14px;
+  color:#b9d5ee;
+  margin-top:15px;
+  line-height:1.5;
+}
+
+a{color:#49a9ff}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<div class="brand">KELDIQ GAMES</div>
+
+<h1>🐍 SNAKE</h1>
+
+<div class="stats">
+  <div class="stat">SCORE<span id="score">0</span></div>
+  <div class="stat">BEST<span id="best">0</span></div>
+</div>
+
+<button onclick="startGame()">NEW GAME</button>
+
+<div id="message" class="message">Press an arrow key or swipe to start!</div>
+
+<canvas id="gameCanvas" width="440" height="440"></canvas>
+
+<div class="controls">
+  <button class="up" onclick="setDirection(0,-1)">▲</button>
+  <button class="left" onclick="setDirection(-1,0)">◀</button>
+  <button class="down" onclick="setDirection(0,1)">▼</button>
+  <button class="right" onclick="setDirection(1,0)">▶</button>
+</div>
+
+<div class="help">
+Use <b>Arrow Keys</b>, <b>WASD</b>, swipe, or the buttons.<br>
+Eat the food, grow longer, and don't hit yourself!<br><br>
+<a href="/">← Back to Keldiq Games</a>
+</div>
+
+</div>
+
+<script>
+const canvas=document.getElementById("gameCanvas");
+const ctx=canvas.getContext("2d");
+
+const scoreEl=document.getElementById("score");
+const bestEl=document.getElementById("best");
+const message=document.getElementById("message");
+
+const gridSize=20;
+const tile=canvas.width/gridSize;
+
+let snake;
+let food;
+let dx;
+let dy;
+let nextDx;
+let nextDy;
+let score;
+let running;
+let started;
+let loop;
+
+function getBest(){
+  return Number(localStorage.getItem("keldiqSnakeBest")||0);
+}
+
+function startGame(){
+  clearInterval(loop);
+
+  snake=[
+    {x:10,y:10},
+    {x:9,y:10},
+    {x:8,y:10}
+  ];
+
+  dx=1;
+  dy=0;
+  nextDx=1;
+  nextDy=0;
+
+  score=0;
+  running=true;
+  started=false;
+
+  scoreEl.textContent=0;
+  bestEl.textContent=getBest();
+
+  message.textContent="Press an arrow key or swipe to start!";
+
+  placeFood();
+  draw();
+
+  loop=setInterval(gameLoop,110);
+}
+
+function placeFood(){
+  do{
+    food={
+      x:Math.floor(Math.random()*gridSize),
+      y:Math.floor(Math.random()*gridSize)
+    };
+  }while(snake.some(p=>p.x===food.x&&p.y===food.y));
+}
+
+function gameLoop(){
+  if(!running||!started)return;
+
+  dx=nextDx;
+  dy=nextDy;
+
+  const head={
+    x:snake[0].x+dx,
+    y:snake[0].y+dy
+  };
+
+  if(
+    head.x<0 ||
+    head.x>=gridSize ||
+    head.y<0 ||
+    head.y>=gridSize ||
+    snake.some(p=>p.x===head.x&&p.y===head.y)
+  ){
+    endGame();
+    return;
+  }
+
+  snake.unshift(head);
+
+  if(head.x===food.x&&head.y===food.y){
+    score+=10;
+    scoreEl.textContent=score;
+
+    if(score>getBest()){
+      localStorage.setItem("keldiqSnakeBest",score);
+      bestEl.textContent=score;
+    }
+
+    placeFood();
+  }else{
+    snake.pop();
+  }
+
+  draw();
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="#071728";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="#0d2943";
+  ctx.lineWidth=1;
+
+  for(let i=0;i<=gridSize;i++){
+    ctx.beginPath();
+    ctx.moveTo(i*tile,0);
+    ctx.lineTo(i*tile,canvas.height);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0,i*tile);
+    ctx.lineTo(canvas.width,i*tile);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle="#ff405c";
+  ctx.beginPath();
+  ctx.arc(
+    food.x*tile+tile/2,
+    food.y*tile+tile/2,
+    tile*.34,
+    0,
+    Math.PI*2
+  );
+  ctx.fill();
+
+  snake.forEach((part,index)=>{
+    ctx.fillStyle=index===0 ? "#62ff87" : "#20c96b";
+
+    ctx.fillRect(
+      part.x*tile+2,
+      part.y*tile+2,
+      tile-4,
+      tile-4
+    );
+  });
+
+  const head=snake[0];
+
+  ctx.fillStyle="#062016";
+
+  let eye1X=head.x*tile+tile*.35;
+  let eye1Y=head.y*tile+tile*.35;
+  let eye2X=head.x*tile+tile*.65;
+  let eye2Y=head.y*tile+tile*.35;
+
+  if(dx<0){
+    eye1X=eye2X=head.x*tile+tile*.35;
+    eye1Y=head.y*tile+tile*.3;
+    eye2Y=head.y*tile+tile*.7;
+  }
+
+  if(dx>0){
+    eye1X=eye2X=head.x*tile+tile*.65;
+    eye1Y=head.y*tile+tile*.3;
+    eye2Y=head.y*tile+tile*.7;
+  }
+
+  if(dy>0){
+    eye1Y=eye2Y=head.y*tile+tile*.65;
+    eye1X=head.x*tile+tile*.3;
+    eye2X=head.x*tile+tile*.7;
+  }
+
+  ctx.beginPath();
+  ctx.arc(eye1X,eye1Y,2.5,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(eye2X,eye2Y,2.5,0,Math.PI*2);
+  ctx.fill();
+}
+
+function setDirection(x,y){
+  if(!running)return;
+
+  if(x===-dx&&y===-dy)return;
+
+  nextDx=x;
+  nextDy=y;
+  started=true;
+  message.textContent="";
+}
+
+function endGame(){
+  running=false;
+  message.textContent="💥 GAME OVER — Score: "+score;
+}
+
+document.addEventListener("keydown",e=>{
+  const key=e.key.toLowerCase();
+
+  if(
+    ["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d"].includes(key)
+  ){
+    e.preventDefault();
+  }
+
+  if(key==="arrowup"||key==="w")setDirection(0,-1);
+  if(key==="arrowdown"||key==="s")setDirection(0,1);
+  if(key==="arrowleft"||key==="a")setDirection(-1,0);
+  if(key==="arrowright"||key==="d")setDirection(1,0);
+});
+
+let startX=0;
+let startY=0;
+
+canvas.addEventListener("pointerdown",e=>{
+  startX=e.clientX;
+  startY=e.clientY;
+});
+
+canvas.addEventListener("pointerup",e=>{
+  const dxSwipe=e.clientX-startX;
+  const dySwipe=e.clientY-startY;
+
+  if(Math.max(Math.abs(dxSwipe),Math.abs(dySwipe))<20)return;
+
+  if(Math.abs(dxSwipe)>Math.abs(dySwipe)){
+    dxSwipe>0 ? setDirection(1,0) : setDirection(-1,0);
+  }else{
+    dySwipe>0 ? setDirection(0,1) : setDirection(0,-1);
+  }
+});
+
+startGame();
+</script>
+
+</body>
+</html>
