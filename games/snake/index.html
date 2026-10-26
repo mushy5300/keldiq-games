@@ -101,29 +101,29 @@
     <h1>🐍 Snake</h1>
   <div id="scoreboard">
     <div class="score-block">
-        <div class="score-label">SCORE</div>div>
-        <div class="score-value" id="score-display">0</div>div>
-    </div>div>
+        <div class="score-label">SCORE</div>
+        <div class="score-value" id="score-display">0</div>
+    </div>
     <div class="score-block">
-        <div class="score-label">BEST</div>div>
-        <div class="score-value" id="best-display">0</div>div>
-    </div>div>
+        <div class="score-label">BEST</div>
+        <div class="score-value" id="best-display">0</div>
+    </div>
     <div class="score-block">
-        <div class="score-label">LEVEL</div>div>
-        <div class="score-value" id="level-display">1</div>div>
-    </div>div>
-  </div>div>
-  <div id="level-bar-container"><div id="level-bar"></div>div></div>div>
-  <canvas id="gameCanvas" width="400" height="400"></canvas>canvas>
-  <div id="controls">Arrow Keys / WASD to move &nbsp;|&nbsp; P to pause &nbsp;|&nbsp; Enter to start</div>div>
+        <div class="score-label">LEVEL</div>
+        <div class="score-value" id="level-display">1</div>
+    </div>
+  </div>
+  <div id="level-bar-container"><div id="level-bar"></div></div>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div id="controls">Arrow Keys / WASD to move &nbsp;|&nbsp; P to pause &nbsp;|&nbsp; Enter to start</div>
   <div id="mobile-controls">
-    <div class="ctrl-row"><button class="ctrl-btn" id="btn-up">▲</button>button></div>div>
+    <div class="ctrl-row"><button class="ctrl-btn" id="btn-up">▲</button></div>
     <div class="ctrl-row">
-        <button class="ctrl-btn" id="btn-left">◀</button>button>
-        <button class="ctrl-btn" id="btn-down">▼</button>button>
-        <button class="ctrl-btn" id="btn-right">▶</button>button>
-    </div>div>
-  </div>div>
+        <button class="ctrl-btn" id="btn-left">◀</button>
+        <button class="ctrl-btn" id="btn-down">▼</button>
+        <button class="ctrl-btn" id="btn-right">▶</button>
+    </div>
+  </div>
   
   <script>
     // ─── CONFIG ────────────────────────────────────────────────
@@ -136,7 +136,7 @@
 
     // ─── STATE ─────────────────────────────────────────────────
     let snake, dir, nextDir, food, specialFood;
-    let score, best, level, foodEaten;
+    let , best, level, foodEaten;
     let particles = [];
     let state = 'START';     // START | RUNNING | PAUSED | DEAD
     let lastTick = 0, tickInterval;
